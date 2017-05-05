@@ -1,8 +1,83 @@
 # ember-concurrency-decorators
 
-This README outlines the details of collaborating on this Ember addon.
+## EXPERIMENTAL
+
+Babel support for decorator syntax has been fidgety, so expect a bit
+of a bumpy ride. Also, the API of this addon is still pre-Alpha.
+Probably don't use this in prod code.
+
+## Overview
+
+This Ember Addon let's you use the
+[decorator syntax](https://github.com/tc39/proposal-decorators)
+for declaring/configuring
+[ember-concurrency](https://ember-concurrency.com) tasks.
+
+Classic syntax (without decorators):
+
+```js
+import { task } from 'ember-concurrency';
+export default Ember.Component.extend({
+  doStuff: task(function * () {
+    // ...
+  }).restartable()
+});
+
+// elsewhere:
+this.get('doStuff').perform();
+```
+
+With decorator syntax
+
+```js
+import { restartableTask } from 'ember-concurrency-decorators';
+export default Ember.Component.extend({
+  @restartableTask
+  doStuff: function * () {
+    // ...
+  }
+});
+
+// elsewhere:
+this.get('doStuff').perform();
+// `doStuff` is still a Task object that can be `.perform()`ed
+```
+
+There's actually an even nicer syntax that's on the horizon, but
+is NOT YET SUPPORTED due to a [Babel bug](https://github.com/babel/babylon/issues/13).
+
+```js
+export default Ember.Component.extend({
+  // THIS SYNTAX IS NOT YET SUPPORTED, BUT SOON!
+  @restartableTask
+  *doStuff() {
+    // ...
+  }
+});
+```
+
+When this Babel issue is addressed, this syntax should Just Work with
+this addon.
 
 ## Installation
+
+```
+ember install ember-concurrency-decorators
+npm install --save babel-plugin-transform-decorators-legacy
+```
+
+Then you'll need to enable the decorator transpilation plugin in your
+`ember-cli-build.js` file:
+
+```
+  var app = new EmberApp({
+    babel: {
+      plugins: ['transform-decorators-legacy']
+    }
+  });
+```
+
+## Working on this repo
 
 * `git clone <repository-url>` this repository
 * `cd ember-concurrency-decorators`
