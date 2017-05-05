@@ -61,6 +61,12 @@ this addon.
 
 ## Installation
 
+You'll probably have an easier time setting things up by upgrading to
+Babel 6 and `ember-cli@2.13+` first. I'm not sure how to make it work
+for older Babel (maybe it can't?).
+
+Once you've done that:
+
 ```
 ember install ember-concurrency-decorators
 npm install --save babel-plugin-transform-decorators-legacy
