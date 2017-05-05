@@ -59,6 +59,9 @@ export default Ember.Component.extend({
 When this Babel issue is addressed, this syntax should Just Work with
 this addon.
 
+Check out this [weaksauce
+test](https://github.com/machty/ember-concurrency-decorators/blob/master/tests/unit/decorators-test.js#L20) to see all the decorators you can use.
+
 ## Installation
 
 You'll probably have an easier time setting things up by upgrading to

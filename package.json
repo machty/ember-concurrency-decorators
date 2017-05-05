@@ -1,7 +1,9 @@
 {
   "name": "ember-concurrency-decorators",
-  "version": "0.0.1",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.2",
+  "description": "decorator syntax for declaring/configuring ember-concurrency tasks",
+  "author": "Alex Matchneer <machty@gmail.com>",
+  "repository": "https://github.com/machty/ember-concurrency-decorators",
   "keywords": [
     "ember-addon"
   ],
