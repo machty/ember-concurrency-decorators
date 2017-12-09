@@ -3,6 +3,9 @@ import { decorator } from '@ember-decorators/utils/decorator-wrappers';
 import extractValue from '@ember-decorators/utils/extract-value';
 
 function taskify(desc) {
+  if (!desc.writable) {
+    throw new Error('ember-concurrency-decorators does not support using getters and setters');
+  }
   let value = extractValue(desc);
   return (typeof value === 'function') ? ecTask(value) : value;
 }

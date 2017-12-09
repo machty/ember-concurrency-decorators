@@ -1,14 +1,11 @@
-/*eslint-disable*/
-
+import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
-import { timeout } from 'ember-concurrency';
 import {
   task,
   restartableTask,
   dropTask,
   keepLatestTask,
-  enqueueTask,
-  maxConcurrency
+  enqueueTask
 } from 'ember-concurrency-decorators';
 import { module, test } from 'qunit';
 
@@ -17,23 +14,24 @@ module('Unit: decorators');
 test("a plethora of decorators", function(assert) {
   assert.expect(1);
 
-  let Obj = Ember.Object.extend({
+  let Obj = EmberObject.extend({
     @task
     doStuff: function * () {
+      yield;
       return 123;
     },
 
     @restartableTask
-    a: function * () { },
+    a: function * () { yield; },
 
     @keepLatestTask
-    b: function * () { },
+    b: function * () { yield; },
 
     @dropTask
-    c: function * () { },
+    c: function * () { yield; },
 
     @enqueueTask
-    d: function * () { },
+    d: function * () { yield; },
   });
 
   let obj;
@@ -43,4 +41,3 @@ test("a plethora of decorators", function(assert) {
   });
   assert.equal(obj.get('doStuff.last.value'), 123);
 });
-
