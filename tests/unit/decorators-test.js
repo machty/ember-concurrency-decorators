@@ -1,6 +1,6 @@
 /*eslint-disable*/
 
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { timeout } from 'ember-concurrency';
 import {
   task,
@@ -37,7 +37,7 @@ test("a plethora of decorators", function(assert) {
   });
 
   let obj;
-  Ember.run(() => {
+  run(() => {
     obj = Obj.create();
     obj.get('doStuff').perform();
   });
