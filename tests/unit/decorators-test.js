@@ -11,8 +11,8 @@ import { module, test } from 'qunit';
 
 module('Unit: decorators');
 
-test("a plethora of decorators", function(assert) {
-  assert.expect(1);
+test('a plethora of decorators', function(assert) {
+  assert.expect(5);
 
   let Obj = EmberObject.extend({
     @task
@@ -22,22 +22,42 @@ test("a plethora of decorators", function(assert) {
     },
 
     @restartableTask
-    a: function * () { yield; },
+    a: function * () { 
+      yield; 
+      return 456;
+    },
 
     @keepLatestTask
-    b: function * () { yield; },
+    b: function * () { 
+      yield; 
+      return 789;
+    },
 
     @dropTask
-    c: function * () { yield; },
+    c: function * () { 
+      yield; 
+      return 12;
+    },
 
     @enqueueTask
-    d: function * () { yield; },
+    d: function * () { 
+      yield; 
+      return 34;
+    },
   });
 
   let obj;
   run(() => {
     obj = Obj.create();
     obj.get('doStuff').perform();
+    obj.get('a').perform();
+    obj.get('b').perform();
+    obj.get('c').perform();
+    obj.get('d').perform();
   });
   assert.equal(obj.get('doStuff.last.value'), 123);
+  assert.equal(obj.get('a.last.value'), 456);
+  assert.equal(obj.get('b.last.value'), 789);
+  assert.equal(obj.get('c.last.value'), 12);
+  assert.equal(obj.get('d.last.value'), 34);
 });
