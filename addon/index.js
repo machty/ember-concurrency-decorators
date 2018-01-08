@@ -1,54 +1,17 @@
 import { task as ecTask } from 'ember-concurrency';
+import { decorator } from '@ember-decorators/utils/decorator-wrappers';
+import extractValue from '@ember-decorators/utils/extract-value';
 
-function extractValue(desc) {
-  return desc.value ||
-    (typeof desc.initializer === 'function' && desc.initializer());
-}
-
-function isDescriptor(item) {
-  return item &&
-    typeof item === 'object' &&
-    'writable' in item &&
-    'enumerable' in item &&
-    'configurable' in item;
-}
-
-function handleDescriptor(callback, target, key, desc, params = []) {
-  return {
-    enumerable: desc.enumerable,
-    configurable: desc.configurable,
-    writeable: desc.writeable,
-    initializer: function() {
-      if (!desc.writable) {
-        throw new Error('ember-concurrency-decorators does not support using getters and setters');
-      }
-
-      let value = extractValue(desc);
-      return callback(value, params);
-    }
-  };
-}
-
-function decorator(callback) {
-  return function(...params) {
-    // determine if user called as @task('blah', 'blah') or @task
-    if (isDescriptor(params[params.length - 1])) {
-      return handleDescriptor(callback, ...arguments);
-    } else {
-      return function(/* target, key, desc */) {
-        return handleDescriptor(callback, ...arguments, params);
-      };
-    }
-  };
-}
-
-
-function taskify(value) {
+function taskify(desc) {
+  if (!desc.writable) {
+    throw new Error('ember-concurrency-decorators does not support using getters and setters');
+  }
+  let value = extractValue(desc);
   return (typeof value === 'function') ? ecTask(value) : value;
 }
 
-export const task = decorator(v => taskify(v));
-export const restartableTask = decorator(v => taskify(v).restartable());
-export const dropTask = decorator(v => taskify(v).drop());
-export const keepLatestTask = decorator(v => taskify(v).keepLatest());
-export const enqueueTask = decorator(v => taskify(v).enqueue());
+export const task = decorator((target, key, desc) => taskify(desc));
+export const restartableTask = decorator((target, key, desc) => taskify(desc).restartable());
+export const dropTask = decorator((target, key, desc) => taskify(desc).drop());
+export const keepLatestTask = decorator((target, key, desc) => taskify(desc).keepLatest());
+export const enqueueTask = decorator((target, key, desc) => taskify(desc).enqueue());
