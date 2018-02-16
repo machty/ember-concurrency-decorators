@@ -72,25 +72,13 @@ Once you've done that:
 
 ```
 ember install ember-concurrency-decorators
-npm install --save babel-plugin-transform-decorators-legacy
-```
-
-Then you'll need to enable the decorator transpilation plugin in your
-`ember-cli-build.js` file:
-
-```
-  var app = new EmberApp({
-    babel: {
-      plugins: ['transform-decorators-legacy']
-    }
-  });
 ```
 
 ## Working on this repo
 
 * `git clone <repository-url>` this repository
 * `cd ember-concurrency-decorators`
-* `npm install`
+* `yarn install`
 
 ## Running
 
@@ -99,7 +87,7 @@ Then you'll need to enable the decorator transpilation plugin in your
 
 ## Running Tests
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
+* `yarn test` (Runs `ember try:each` to test your addon against multiple Ember versions)
 * `ember test`
 * `ember test --server`
 
