@@ -18,11 +18,11 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "ember-cli-babel": "^6.6.0",
-    "@ember-decorators/utils": "^0.2.0"
+    "@ember-decorators/utils": "^2.1.0",
+    "ember-cli-babel": "^6.6.0"
   },
   "devDependencies": {
-    "@ember-decorators/babel-transforms": "^0.1.0",
+    "@ember-decorators/babel-transforms": "^2.0.1",
     "babel-eslint": "^8.0.3",
     "broccoli-asset-rev": "^2.4.5",
     "ember-cli": "~2.17.0",
