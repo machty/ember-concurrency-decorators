@@ -37,7 +37,7 @@ this.get('doStuff').perform();
 
 ### After
 
-#### JavasScript
+#### JavaScript
 
 ##### ES6 class syntax with decorators
 
@@ -65,9 +65,18 @@ See the [**TypeScript**](#typescript) section to see it in action.
 When this Babel issue is addressed, this syntax should Just Work with
 this addon.
 
-##### Classic ("Ember Object Model") syntax with decorators
+##### Classic ("Ember object model") syntax with decorators
 
-Possible, but not recommended.
+While still supported through [`transform-decorators-legacy`](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy),
+we *do not* recommend using decorators with the Ember object model, since the
+[revised version of the decorators proposal](https://github.com/tc39/proposal-decorators)
+only allows decorators for classes. This means that, when it advances to
+[stage 3](https://github.com/tc39/proposals#stage-3) and
+[Babel 7](https://babeljs.io/docs/plugins/transform-decorators/) is released,
+support for decorating objects (as opposed to classes) will fade away very soon.
+
+The [`ember-decorators`](https://ember-decorators.github.io/ember-decorators/latest/)
+project also [decided to drop support for objects](https://ember-decorators.github.io/ember-decorators/latest/docs/why-go-native).
 
 ```js
 import Component from '@ember/component';
