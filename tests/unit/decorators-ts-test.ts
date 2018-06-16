@@ -9,42 +9,42 @@ import {
 } from 'ember-concurrency-decorators';
 import { module, test } from 'qunit';
 
-module('Unit: decorators');
+module('Unit: decorators (TS)');
 
 test('a plethora of decorators', function(assert) {
   assert.expect(5);
 
-  let Obj = EmberObject.extend({
+  class Obj extends EmberObject {
     @task
-    doStuff: function * () {
+    *doStuff() {
       yield;
       return 123;
-    },
+    }
 
     @restartableTask
-    a: function * () { 
-      yield; 
+    *a() {
+      yield;
       return 456;
-    },
+    }
 
     @keepLatestTask
-    b: function * () { 
-      yield; 
+    *b() {
+      yield;
       return 789;
-    },
+    }
 
     @dropTask
-    c: function * () { 
-      yield; 
+    *c() {
+      yield;
       return 12;
-    },
+    }
 
     @enqueueTask
-    d: function * () { 
-      yield; 
+    *d() {
+      yield;
       return 34;
-    },
-  });
+    }
+  }
 
   let obj;
   run(() => {
