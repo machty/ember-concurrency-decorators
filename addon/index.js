@@ -1,5 +1,6 @@
 import { task as ecTask } from 'ember-concurrency';
-import { computedDecorator } from "@ember-decorators/utils/computed";
+import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
+import { assert } from '@ember/debug';
 
 function extractValue(desc) {
   return desc.value ||typeof desc.initializer === 'function' && desc.initializer() || null;
@@ -13,8 +14,31 @@ function taskify(desc) {
   return (typeof value === 'function') ? ecTask(value) : value;
 }
 
-export const task = computedDecorator((target, key, desc) => taskify(desc));
-export const restartableTask = computedDecorator((target, key, desc) => taskify(desc).restartable());
-export const dropTask = computedDecorator((target, key, desc) => taskify(desc).drop());
-export const keepLatestTask = computedDecorator((target, key, desc) => taskify(desc).keepLatest());
-export const enqueueTask = computedDecorator((target, key, desc) => taskify(desc).enqueue());
+const applyOptions = (options, task) =>
+  Object.entries(options).reduce(
+    (task, [key, value]) => {
+      if (value === true) {
+        return task[key]();
+      }
+      if (typeof value === 'string' || typeof value === 'number') {
+        return task[key](value);
+      }
+      assert(`ember-concurrency-decorators: Cannot apply option '${key}' of type ${typeof value} with value '${value}' to task. Either specify the option as 'true' or provide a numeric or string value.`)
+      return task;
+    }, task
+  );
+
+const createTaskDecorator = (baseOptions = {}) =>
+  computedDecoratorWithParams(
+    (target, key, desc, [userOptions]) =>
+      applyOptions(
+        Object.assign({}, baseOptions, userOptions),
+        taskify(desc)
+      )
+  );
+
+export const task = createTaskDecorator();
+export const restartableTask = createTaskDecorator({ restartable: true });
+export const dropTask = createTaskDecorator({ drop: true });
+export const keepLatestTask = createTaskDecorator({ keepLatest: true });
+export const enqueueTask = createTaskDecorator({ enqueue: true });
