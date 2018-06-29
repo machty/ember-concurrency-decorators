@@ -17,9 +17,7 @@
     "lint:js": "eslint ./*.js addon addon-test-support app blueprints config lib server test-support tests",
     "start": "ember serve",
     "test": "ember test",
-    "test:all": "ember try:each",
-    "prepublishOnly": "ember ts:precompile",
-    "postpublish": "ember ts:clean"
+    "test:all": "ember try:each"
   },
   "dependencies": {
     "@ember-decorators/utils": "^2.1.0",
