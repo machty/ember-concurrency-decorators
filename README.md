@@ -1,13 +1,5 @@
 # ember-concurrency-decorators
 
-## EXPERIMENTAL
-
-Babel support for decorator syntax has been fidgety, so expect a bit
-of a bumpy ride. Also, the API of this addon is still pre-Alpha.
-Probably don't use this in prod code.
-
-Also give the [ember-decorators docs](https://ember-decorators.github.io/ember-decorators/) a read.
-
 ## Overview
 
 This Ember Addon let's you use the
@@ -16,6 +8,14 @@ for declaring/configuring
 [ember-concurrency](https://ember-concurrency.com) tasks.
 Check out this [weaksauce
 test](https://github.com/machty/ember-concurrency-decorators/blob/master/tests/unit/decorators-js-test.js#L17) to see all the decorators you can use.
+
+## Installation
+
+You'll need at least `ember-cli@2.13+` and `ember-cli-babel@6+`.
+
+```
+ember install ember-concurrency-decorators
+```
 
 ### Before
 
@@ -112,19 +112,6 @@ export default class ExampleComponent extends Component {
 // elsewhere:
 this.get('doStuff').perform();
 // `doStuff` is still a Task object that can be `.perform()`ed
-```
-
-
-## Installation
-
-You'll probably have an easier time setting things up by upgrading to
-Babel 6 and `ember-cli@2.13+` first. I'm not sure how to make it work
-for older Babel (maybe it can't?).
-
-Once you've done that:
-
-```
-ember install ember-concurrency-decorators
 ```
 
 ## Working on this repo
