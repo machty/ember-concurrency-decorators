@@ -1,102 +1,129 @@
 # ember-concurrency-decorators
 
-## Overview
-
-This Ember Addon let's you use the
+This Ember Addon lets you use the
 [decorator syntax](https://github.com/tc39/proposal-decorators)
 for declaring/configuring
 [ember-concurrency](https://ember-concurrency.com) tasks.
-Check out this [weaksauce
-test](https://github.com/machty/ember-concurrency-decorators/blob/master/tests/unit/decorators-js-test.js#L17) to see all the decorators you can use.
 
 ## Installation
 
 You'll need at least `ember-cli@2.13+` and `ember-cli-babel@6+`.
+Then install as any other addon:
 
 ```
 ember install ember-concurrency-decorators
 ```
 
-### Before
+## Usage
 
-Classic syntax without decorators.
+### Available decorators
 
-```js
-import Component from '@ember/decorators';
-import { task } from 'ember-concurrency';
-
-export default Ember.Component.extend({
-  doStuff: task(function*() {
-    // ...
-  }).restartable()
-});
-
-// elsewhere:
-this.get('doStuff').perform();
-```
-
-### After
-
-#### JavaScript
-
-##### ES6 class syntax with decorators
+#### `@task`
 
 ```js
 import Component from '@ember/component';
-import { restartableTask } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
-  @restartableTask
+  @task
   doStuff = function*() {
     // ...
   }
-});
 
-// elsewhere:
-this.get('doStuff').perform();
-// `doStuff` is still a Task object that can be `.perform()`ed
+  // and then elsewhere
+  executeTheTask() {
+    // `doStuff` is still a `Task` object that can be `.perform()`ed
+    this.doStuff.perform();
+    console.log(this.doStuff.isRunning);
+  }
+}
 ```
 
-There's actually an even nicer syntax that's on the horizon, but
-is NOT YET SUPPORTED due to a [Babel bug](https://github.com/babel/babylon/issues/13).
+You can also pass further options to the task decorator:
 
-See the [**TypeScript**](#typescript) section to see it in action.
+```js
+@task({
+  maxConcurrency: 3,
+  restartable: true
+})
+doStuff = function*() {
+  // ...
+}
+```
 
-When this Babel issue is addressed, this syntax should Just Work with
-this addon.
+For your convenience, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
-##### Classic ("Ember object model") syntax with decorators
+- **`@restartableTask`** -> `@task({ restartable: true })`
+- **`@dropTask`** -> `@task({ drop: true })`
+- **`@keepLatestTask`** -> `@task({ keepLatest: true })`
+- **`@enqueueTask`** -> `@task({ enqueue: true })`
 
-While still supported through [`transform-decorators-legacy`](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy),
-we *do not* recommend using decorators with the Ember object model, since the
-[revised version of the decorators proposal](https://github.com/tc39/proposal-decorators)
-only allows decorators for classes. This means that, when it advances to
-[stage 3](https://github.com/tc39/proposals#stage-3) and
-[Babel 7](https://babeljs.io/docs/plugins/transform-decorators/) is released,
-support for decorating objects (as opposed to classes) will fade away very soon.
+You can still pass further options to these decorators, like:
 
-The [`ember-decorators`](https://ember-decorators.github.io/ember-decorators/latest/)
-project also [decided to drop support for objects](https://ember-decorators.github.io/ember-decorators/latest/docs/why-go-native).
+```js
+@restartableTask({ maxConcurrency: 3 })
+doStuff = function*() {
+  // ...
+}
+```
+
+#### `@taskGroup`
 
 ```js
 import Component from '@ember/component';
-import { restartableTask } from 'ember-concurrency-decorators';
+import { task, taskGroup } from 'ember-concurrency-decorators';
 
-export default Component.extend({
-  @restartableTask
-  doStuff: function*() {
+export default class ExampleComponent extends Component {
+  @taskGroup someTaskGroup;
+
+  @task({ group: 'someTaskGroup' })
+  doStuff = function*() {
     // ...
   }
-});
 
-// elsewhere:
-this.get('doStuff').perform();
-// `doStuff` is still a Task object that can be `.perform()`ed
+  @task({ group: 'someTaskGroup' })
+  doOtherStuff = function*() {
+    // ...
+  }
+
+  // and then elsewhere
+  executeTheTask() {
+    // `doStuff` is still a `Task `object that can be `.perform()`ed
+    this.doStuff.perform();
+
+    // `someTaskGroup` is still a `TaskGroup` object
+    console.log(this.someTaskGroup.isRunning);
+  }
+}
 ```
+
+You can also pass further options to the task group decorator:
+
+```js
+@taskGroup({
+  maxConcurrency: 3,
+  drop: true
+}) someTaskGroup;
+```
+
+As for `@task`, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
+
+- **`@restartableTaskGroup`** -> `@taskGroup({ restartable: true })`
+- **`@dropTaskGroup`** -> `@taskGroup({ drop: true })`
+- **`@keepLatestTaskGroup`** -> `@taskGroup({ keepLatest: true })`
+- **`@enqueueTaskGroup`** -> `@taskGroup({ enqueue: true })`
+
+You can still pass further options to these decorators, like:
+
+```js
+@dropTaskGroup({ maxConcurrency: 3 }) someTaskGroup;
+```
+
+### Syntax
 
 #### TypeScript
 
-TypeScript users can just use native ES6 class syntax with decorators.
+Assuming you are using [ember-cli-typescript](https://github.com/typed-ember/ember-cli-typescript), you can just use native ES6 class syntax with decorators on generator methods.
 
 ```js
 import Component from '@ember/component';
@@ -110,33 +137,31 @@ export default class ExampleComponent extends Component {
 });
 
 // elsewhere:
-this.get('doStuff').perform();
-// `doStuff` is still a Task object that can be `.perform()`ed
+this.doStuff.perform();
 ```
 
-## Working on this repo
+If you use [`@babel/plugin-transform-typescript`](https://babeljs.io/docs/en/next/babel-plugin-transform-typescript.html) with [`@babel/plugin-proposal-decorators`](https://babeljs.io/docs/en/next/babel-plugin-proposal-decorators.html) in `loose` mode (as you currently must), you can't use the above syntax. Instead read on below:
 
-* `git clone <repository-url>` this repository
-* `cd ember-concurrency-decorators`
-* `yarn install`
+#### JavaScript
 
-### Linting
+If you are using plain old JavaScript, use the decorators like this:
 
-* `yarn run lint:js`
-* `yarn run lint:js -- --fix`
+```js
+import Component from '@ember/component';
+import { restartableTask } from 'ember-concurrency-decorators';
 
-### Running tests
+export default class ExampleComponent extends Component {
+  @restartableTask
+  doStuff = function*() {
+    // ...
+  }
+});
 
-* `ember test` – Runs the test suite on the current Ember version
-* `ember test --server` – Runs the test suite in "watch mode"
-* `ember try:each` – Runs the test suite against multiple Ember versions
+// elsewhere:
+this.doStuff.perform();
+```
 
-### Running the dummy application
-
-* `ember serve`
-* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
-
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+You need to use this assignment / initializer syntax instead of "proper" generator methods, because of a bug in the `loose` mode of [`@babel/plugin-proposal-decorators`](https://babeljs.io/docs/en/next/babel-plugin-proposal-decorators.html), which ember-decorators depends on. When [ember-decorators adds support for stage 2 decorators](https://github.com/ember-decorators/ember-decorators/issues/278), you will be able to use the generator method syntax as well. 🎉
 
 ## License
 
