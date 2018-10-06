@@ -5,7 +5,7 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": "machty/ember-concurrency-decorators",
   "license": "MIT",
   "author": "",
   "directories": {
