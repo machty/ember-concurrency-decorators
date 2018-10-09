@@ -70,6 +70,7 @@
     "**/@types/ember-test-helpers": "^1.0.3",
     "**/@types/ember-testing-helpers": "^0.0.3",
     "**/@types/ember__test-helpers": "^0.7.5",
+    "**/@types/jquery": "^3.3.13",
     "**/@types/qunit": "^2.5.3",
     "**/@types/rsvp": "^4.0.2"
   },

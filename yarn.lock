@@ -928,10 +928,12 @@
   resolved "https://registry.yarnpkg.com/@types/htmlbars-inline-precompile/-/htmlbars-inline-precompile-1.0.0.tgz#4c283da1a7e303b269de3c6aa953acc8d8736949"
   integrity sha512-J7+MkDbUl/Sb57OuniuvVr4HLlHV2ub2y31HmD9QiepLEMj0zGIv4hbyOfGHTKWCcU0r7lxcDdHdLyUjpuL21w==
 
-"@types/jquery@*":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.2.tgz#8700226bdde24b6f98e3a60126dbaab3b2a3ab41"
-  integrity sha512-ByZwKSEqteAta4VrIalqGJZmMq9lWPD3H3f5Xs6RR8B7zQRDPGUtjoKBYNtKTz/7LgBEQMdlxVbbjQfUaEIItA==
+"@types/jquery@*", "@types/jquery@^3.3.13":
+  version "3.3.13"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.13.tgz#7c06223fd38d121fe43180667e957a3fa6aefe5d"
+  integrity sha512-jXHKq6iTh+HWOsOIwKwcRUqMojZhe4ngggyIlRG+rZIqxUpHv1vQbe5b5hm4eTw2CoX02AZrryJGcSV6ux9EKw==
+  dependencies:
+    "@types/sizzle" "*"
 
 "@types/qunit@^2.5.3":
   version "2.5.3"
@@ -942,6 +944,11 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/rsvp/-/rsvp-4.0.2.tgz#bf9f72eaa6771292638a85bb8ce1db97e754b371"
   integrity sha512-48ZwxFD1hdBj8QMOSNGA2kYuo3+SKh8OEYh5cMi7cPRZXBF9jwVPV4yqA7EcJTNlAJL0v99pEUYetl0TsufMQA==
+
+"@types/sizzle@*":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
+  integrity sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==
 
 abbrev@1:
   version "1.1.1"
