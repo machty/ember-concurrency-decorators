@@ -34,15 +34,23 @@
       "ember-concurrency-decorators/*": [
         "addon/*"
       ],
+      "ember-concurrency-decorators/test-support": [
+        "addon-test-support"
+      ],
+      "ember-concurrency-decorators/test-support/*": [
+        "addon-test-support/*"
+      ],
       "*": [
         "types/*"
       ]
     }
   },
   "include": [
-    "app",
-    "addon",
-    "tests",
-    "types"
+    "app/**/*",
+    "addon/**/*",
+    "tests/**/*",
+    "types/**/*",
+    "test-support/**/*",
+    "addon-test-support/**/*"
   ]
 }
