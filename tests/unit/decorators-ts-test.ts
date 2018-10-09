@@ -48,16 +48,26 @@ module('Unit | decorators (TS)', function() {
     let obj;
     run(() => {
       obj = Obj.create();
+      // @ts-ignore
       obj.get('doStuff').perform();
+      // @ts-ignore
       obj.get('a').perform();
+      // @ts-ignore
       obj.get('b').perform();
+      // @ts-ignore
       obj.get('c').perform();
+      // @ts-ignore
       obj.get('d').perform();
     });
+    // @ts-ignore
     assert.equal(obj.get('doStuff.last.value'), 123);
+    // @ts-ignore
     assert.equal(obj.get('a.last.value'), 456);
+    // @ts-ignore
     assert.equal(obj.get('b.last.value'), 789);
+    // @ts-ignore
     assert.equal(obj.get('c.last.value'), 12);
+    // @ts-ignore
     assert.equal(obj.get('d.last.value'), 34);
   });
 });

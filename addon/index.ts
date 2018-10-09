@@ -1,6 +1,9 @@
 import {
   task as createTaskProperty,
-  taskGroup as createTaskGroupProperty
+  taskGroup as createTaskGroupProperty,
+  ConcurrencyModifiable,
+  TaskProperty,
+  TaskGroupProperty
 } from 'ember-concurrency';
 import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
 import { assert } from '@ember/debug';
@@ -31,7 +34,7 @@ export { default as lastValue } from './last-value';
  * @returns {object|null}
  * @private
  */
-function extractValue(desc) {
+function extractValue(desc: PropertyDescriptor) {
   if ('value' in desc) {
     return desc.value;
   }
@@ -50,7 +53,7 @@ function extractValue(desc) {
  * @returns {TaskProperty}
  * @private
  */
-function createTaskFromDescriptor(desc) {
+function createTaskFromDescriptor(desc: PropertyDescriptor) {
   assert(
     'ember-concurrency-decorators: Getters and setters are not supported for tasks.',
     desc.writable
@@ -74,7 +77,7 @@ function createTaskFromDescriptor(desc) {
  * @returns {TaskGroupProperty}
  * @private
  */
-function createTaskGroupFromDescriptor(desc) {
+function createTaskGroupFromDescriptor(desc: PropertyDescriptor) {
   assert(
     'ember-concurrency-decorators: Getters and setters are not supported for task groups.',
     desc.writable
@@ -86,6 +89,10 @@ function createTaskGroupFromDescriptor(desc) {
   return createTaskGroupProperty();
 }
 
+type ModifierOptions = {
+  [key in keyof ConcurrencyModifiable]: true | string | number
+};
+
 /**
  * Applies the `options` provided using the chaining API on the given `task`.
  *
@@ -93,23 +100,34 @@ function createTaskGroupFromDescriptor(desc) {
  * @param {TaskProperty|TaskGroupProperty} task
  * @private
  */
-const applyOptions = (options, task) =>
-  Object.entries(options).reduce((task, [key, value]) => {
-    if (value === true) {
-      return task[key]();
-    }
-    if (
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      Array.isArray(value)
-    ) {
-      return task[key](value);
-    }
-    assert(
-      `ember-concurrency-decorators: Cannot apply option '${key}' of type ${typeof value} with value '${value}' to task. Either specify the option as 'true' or provide a numeric or string value.`
-    );
-    return task;
-  }, task);
+const applyOptions = (
+  options: ModifierOptions,
+  task: TaskProperty | TaskGroupProperty
+) =>
+  Object.entries(options).reduce(
+    (
+      task,
+      [key, value]: [keyof ConcurrencyModifiable, true | string | number]
+    ) => {
+      if (value === true) {
+        // @ts-ignore
+        return task[key]();
+      }
+      if (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        Array.isArray(value)
+      ) {
+        // @ts-ignore
+        return task[key](value);
+      }
+      assert(
+        `ember-concurrency-decorators: Cannot apply option '${key}' of type ${typeof value} with value '${value}' to task. Either specify the option as 'true' or provide a numeric or string value.`
+      );
+      return task;
+    },
+    task
+  );
 
 /**
  * Creates a decorator function that transforms the decorated property using the
@@ -120,7 +138,12 @@ const applyOptions = (options, task) =>
  * @param {object} [baseOptions={}]
  * @private
  */
-const createDecorator = (propertyCreator, baseOptions = {}) =>
+const createDecorator = (
+  propertyCreator: (
+    desc: PropertyDescriptor
+  ) => TaskProperty | TaskGroupProperty,
+  baseOptions = {}
+) =>
   computedDecoratorWithParams((target, key, desc, [userOptions]) =>
     applyOptions(
       Object.assign({}, baseOptions, userOptions),
