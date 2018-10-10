@@ -12,38 +12,47 @@ import { module, test } from 'qunit';
 module('Unit: decorators (JS)');
 
 test('Ember object model (EmberObject.extend)', function(assert) {
-  assert.expect(5);
+  assert.expect(6);
 
   const Obj = EmberObject.extend({
     @task
-    doStuff: function * () {
+    doStuff: function*() {
       yield;
       return 123;
     },
 
     @restartableTask
-    a: function * () {
+    a: function*() {
       yield;
       return 456;
     },
 
     @keepLatestTask
-    b: function * () {
+    b: function*() {
       yield;
       return 789;
     },
 
     @dropTask
-    c: function * () {
+    c: function*() {
       yield;
       return 12;
     },
 
     @enqueueTask
-    d: function * () {
+    d: function*() {
       yield;
       return 34;
     },
+
+    @task
+    encapsulated: {
+      privateState: 56,
+      *perform() {
+        yield;
+        return this.privateState;
+      }
+    }
   });
 
   let obj;
@@ -54,46 +63,57 @@ test('Ember object model (EmberObject.extend)', function(assert) {
     obj.get('b').perform();
     obj.get('c').perform();
     obj.get('d').perform();
+    obj.get('encapsulated').perform();
   });
   assert.equal(obj.get('doStuff.last.value'), 123);
   assert.equal(obj.get('a.last.value'), 456);
   assert.equal(obj.get('b.last.value'), 789);
   assert.equal(obj.get('c.last.value'), 12);
   assert.equal(obj.get('d.last.value'), 34);
+  assert.equal(obj.get('encapsulated.last.value'), 56);
 });
 
-test('Native classes (class extends EmberObject)', function (assert) {
-  assert.expect(5);
+test('Native classes (class extends EmberObject)', function(assert) {
+  assert.expect(6);
 
   class Obj extends EmberObject {
     @task
-    doStuff = function* () {
+    doStuff = function*() {
       yield;
       return 123;
     };
 
     @restartableTask
-    a = function* () {
+    a = function*() {
       yield;
       return 456;
     };
 
     @keepLatestTask
-    b = function* () {
+    b = function*() {
       yield;
       return 789;
     };
 
     @dropTask
-    c = function* () {
+    c = function*() {
       yield;
       return 12;
     };
 
     @enqueueTask
-    d = function* () {
+    d = function*() {
       yield;
       return 34;
+    };
+
+    @task
+    encapsulated = {
+      privateState: 56,
+      *perform() {
+        yield;
+        return this.privateState;
+      }
     };
   }
 
@@ -105,10 +125,12 @@ test('Native classes (class extends EmberObject)', function (assert) {
     obj.get('b').perform();
     obj.get('c').perform();
     obj.get('d').perform();
+    obj.get('encapsulated').perform();
   });
   assert.equal(obj.get('doStuff.last.value'), 123);
   assert.equal(obj.get('a.last.value'), 456);
   assert.equal(obj.get('b.last.value'), 789);
   assert.equal(obj.get('c.last.value'), 12);
   assert.equal(obj.get('d.last.value'), 34);
+  assert.equal(obj.get('encapsulated.last.value'), 56);
 });

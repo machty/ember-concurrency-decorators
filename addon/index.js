@@ -56,8 +56,9 @@ function createTaskFromDescriptor(desc) {
 
   const value = extractValue(desc);
   assert(
-    'ember-concurrency-decorators: Can only decorate a generator function as a task.',
-    typeof value === 'function'
+    'ember-concurrency-decorators: Can only decorate a generator function as a task or an object with a generator method `perform` as an encapsulated task.',
+    typeof value === 'function' ||
+      (typeof value === 'object' && typeof value.perform === 'function')
   );
 
   return createTaskProperty(value);
