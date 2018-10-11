@@ -1,4 +1,4 @@
-import { begin, end } from "@ember/runloop";
+import { begin, end } from '@ember/runloop';
 
 /**
  * Ensures that each test is executed within a RunLoop

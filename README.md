@@ -21,8 +21,8 @@ ember install ember-concurrency-decorators
 #### `@task`
 
 ```js
-import Component from "@ember/component";
-import { task } from "ember-concurrency-decorators";
+import Component from '@ember/component';
+import { task } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
@@ -70,19 +70,19 @@ doStuff = function*() {
 #### `@taskGroup`
 
 ```js
-import Component from "@ember/component";
-import { task, taskGroup } from "ember-concurrency-decorators";
+import Component from '@ember/component';
+import { task, taskGroup } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @taskGroup
   someTaskGroup;
 
-  @task({ group: "someTaskGroup" })
+  @task({ group: 'someTaskGroup' })
   doStuff = function*() {
     // ...
   };
 
-  @task({ group: "someTaskGroup" })
+  @task({ group: 'someTaskGroup' })
   doOtherStuff = function*() {
     // ...
   };
@@ -125,9 +125,9 @@ You can still pass further options to these decorators, like:
 This decorator allows you to alias a property to the result of a task. You can also provide a default value to use before the task has completed.
 
 ```js
-import Component from "@ember/component";
-import { task } from "ember-concurrency-decorators";
-import { lastValue } from "ember-concurrency-decorators/last-value";
+import Component from '@ember/component';
+import { task } from 'ember-concurrency-decorators';
+import { lastValue } from 'ember-concurrency-decorators/last-value';
 
 export default class ExampleComponent extends Component {
   @task
@@ -135,11 +135,11 @@ export default class ExampleComponent extends Component {
     // ...
   };
 
-  @lastValue("someTask")
+  @lastValue('someTask')
   someTaskValue;
 
-  @lastValue("someTask")
-  someTaskValueWithDefault = "A default value";
+  @lastValue('someTask')
+  someTaskValueWithDefault = 'A default value';
 }
 ```
 
