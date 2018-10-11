@@ -1,5 +1,5 @@
-import { get, computed } from "@ember/object";
-import { computedDecoratorWithParams } from "@ember-decorators/utils/computed";
+import { get, computed } from '@ember/object';
+import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
 
 /**
  * This decorator allows you to alias a property to the result of a task. You can also provide a default value to use before the task has completed.
@@ -31,7 +31,7 @@ export default computedDecoratorWithParams(function(target, key, desc, [task]) {
     const lastInstance = get(this, `${task}.lastSuccessful`);
 
     if (lastInstance) {
-      return get(lastInstance, "value");
+      return get(lastInstance, 'value');
     }
 
     if (desc.initializer) {
