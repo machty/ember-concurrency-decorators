@@ -5,6 +5,8 @@ import {
 import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
 import { assert } from '@ember/debug';
 
+export { default as lastValue } from './last-value';
+
 /**
  * This utility function assures compatibility with the Ember object model style
  * and initializer syntax required by Babel 6.

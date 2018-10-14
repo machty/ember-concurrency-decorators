@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
 import { task } from 'ember-concurrency-decorators';
-import lastValue from 'ember-concurrency-decorators/last-value';
+import { lastValue } from 'ember-concurrency-decorators';
 import inRunLoop, {
   next as nextLoop
 } from 'ember-concurrency-decorators/test-support/in-run-loop';

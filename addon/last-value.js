@@ -7,7 +7,7 @@ import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
  * ```js
  * import Component from "@ember/component";
  * import { task } from "ember-concurrency-decorators";
- * import { lastValue } from "ember-concurrency-decorators/last-value";
+ * import { lastValue } from "ember-concurrency-decorators";
  *
  * export default class ExampleComponent extends Component {
  *   @task

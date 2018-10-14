@@ -157,7 +157,7 @@ This decorator allows you to alias a property to the result of a task. You can a
 ```js
 import Component from '@ember/component';
 import { task } from 'ember-concurrency-decorators';
-import { lastValue } from 'ember-concurrency-decorators/last-value';
+import { lastValue } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
