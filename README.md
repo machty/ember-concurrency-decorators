@@ -83,10 +83,12 @@ doStuff = function*() {
 
 For your convenience, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
-- **`@restartableTask`** -> `@task({ restartable: true })`
-- **`@dropTask`** -> `@task({ drop: true })`
-- **`@keepLatestTask`** -> `@task({ keepLatest: true })`
-- **`@enqueueTask`** -> `@task({ enqueue: true })`
+| Shorthand          | Equivalent                     |
+|--------------------|--------------------------------|
+| `@restartableTask` | `@task({ restartable: true })` |
+| `@dropTask`        | `@task({ drop: true })`        |
+| `@keepLatestTask`  | `@task({ keepLatest: true })`  |
+| `@enqueueTask`     | `@task({ enqueue: true })`     |
 
 You can still pass further options to these decorators, like:
 
@@ -139,10 +141,12 @@ You can also pass further options to the task group decorator:
 
 As for `@task`, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
-- **`@restartableTaskGroup`** -> `@taskGroup({ restartable: true })`
-- **`@dropTaskGroup`** -> `@taskGroup({ drop: true })`
-- **`@keepLatestTaskGroup`** -> `@taskGroup({ keepLatest: true })`
-- **`@enqueueTaskGroup`** -> `@taskGroup({ enqueue: true })`
+| Shorthand               | Equivalent                          |
+|-------------------------|-------------------------------------|
+| `@restartableTaskGroup` | `@taskGroup({ restartable: true })` |
+| `@dropTaskGroup`        | `@taskGroup({ drop: true })`        |
+| `@keepLatestTaskGroup`  | `@taskGroup({ keepLatest: true })`  |
+| `@enqueueTaskGroup`     | `@taskGroup({ enqueue: true })`     |
 
 You can still pass further options to these decorators, like:
 
