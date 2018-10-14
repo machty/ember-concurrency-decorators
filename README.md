@@ -36,6 +36,18 @@ ember install @ember-decorators/babel-transforms
 
 ### Available decorators
 
+- **[`@task`](#task)**: turns a generator method into a task
+  - `@restartableTask`
+  - `@dropTask`
+  - `@keepLatestTask`
+  - `@enqueueTask`
+- **[`@taskGroup`](#taskgroup)**: creates a task group from a property
+  - `@restartableTaskGroup`
+  - `@dropTaskGroup`
+  - `@keepLatestTaskGroup`
+  - `@enqueueTaskGroup`
+- **[`@lastValue`](#lastvalue)**: alias a property to the result of a task with an optional default value
+
 #### `@task`
 
 ```js
