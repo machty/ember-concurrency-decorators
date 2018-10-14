@@ -5,9 +5,9 @@ import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
  * This decorator allows you to alias a property to the result of a task. You can also provide a default value to use before the task has completed.
  *
  * ```js
- * import Component from "@ember/component";
- * import { task } from "ember-concurrency-decorators";
- * import { lastValue } from "ember-concurrency-decorators";
+ * import Component from '@ember/component';
+ * import { task } from 'ember-concurrency-decorators';
+ * import { lastValue } from 'ember-concurrency-decorators';
  *
  * export default class ExampleComponent extends Component {
  *   @task
@@ -15,11 +15,11 @@ import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
  *     // ...
  *   };
  *
- *   @lastValue("someTask")
+ *   @lastValue('someTask')
  *   someTaskValue;
  *
- *   @lastValue("someTask")
- *   someTaskValueWithDefault = "A default value";
+ *   @lastValue('someTask')
+ *   someTaskValueWithDefault = 'A default value';
  * }
  * ```
  *
