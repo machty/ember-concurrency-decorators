@@ -1,5 +1,15 @@
 # ember-concurrency-decorators
 
+[![Build Status](https://travis-ci.org/machty/ember-concurrency-decorators.svg)](https://travis-ci.org/machty/ember-concurrency-decorators)
+[![npm version](https://badge.fury.io/js/ember-concurrency-decorators.svg)](http://badge.fury.io/js/ember-concurrency-decorators)
+[![Download Total](https://img.shields.io/npm/dt/ember-concurrency-decorators.svg)](http://badge.fury.io/js/ember-concurrency-decorators)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-concurrency-decorators.svg)](https://emberobserver.com/addons/ember-concurrency-decorators)
+[![Ember Versions](https://img.shields.io/badge/Ember.js%20Versions-%5E2.12%20%7C%7C%20%5E3.0-brightgreen.svg)](https://travis-ci.org/machty/ember-concurrency-decorators)
+[![dependencies](https://img.shields.io/david/machty/ember-concurrency-decorators.svg)](https://david-dm.org/machty/ember-concurrency-decorators)
+[![devDependencies](https://img.shields.io/david/dev/machty/ember-concurrency-decorators.svg)](https://david-dm.org/machty/ember-concurrency-decorators)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+
+
 This Ember Addon lets you use the
 [decorator syntax](https://github.com/tc39/proposal-decorators)
 for declaring/configuring
