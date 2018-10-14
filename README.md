@@ -10,7 +10,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 
-This Ember Addon lets you use the
+This Ember addon lets you use the
 [decorator syntax](https://github.com/tc39/proposal-decorators)
 for declaring/configuring
 [ember-concurrency](https://ember-concurrency.com) tasks.
@@ -22,6 +22,14 @@ Then install as any other addon:
 
 ```
 ember install ember-concurrency-decorators
+```
+
+If you are _not_ using TypeScript, in order for [ember-cli-babel](https://github.com/babel/ember-cli-babel) to understand the `@decorator` syntax, you at least also need to install [`@ember-decorators/babel-transforms`](https://github.com/ember-decorators/babel-transforms). Instead of that you can also install the [`ember-decorators`](https://github.com/ember-decorators/ember-decorators) meta package:
+
+```bash
+ember install ember-decorators
+# or
+ember install @ember-decorators/babel-transforms
 ```
 
 ## Usage
