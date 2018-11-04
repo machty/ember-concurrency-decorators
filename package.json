@@ -21,7 +21,7 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
-    "@ember-decorators/utils": "^2.5.1",
+    "@ember-decorators/utils": "^3.0.1",
     "ember-cli-babel": "^7.1.2"
   },
   "devDependencies": {
