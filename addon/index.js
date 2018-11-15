@@ -95,20 +95,14 @@ function createTaskGroupFromDescriptor(desc) {
  */
 const applyOptions = (options, task) =>
   Object.entries(options).reduce((task, [key, value]) => {
+    assert(
+      `ember-concurrency-decorators: Option '${key}' is not a valid function`,
+      typeof task[key] === 'function'
+    )
     if (value === true) {
       return task[key]();
     }
-    if (
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      Array.isArray(value)
-    ) {
-      return task[key](value);
-    }
-    assert(
-      `ember-concurrency-decorators: Cannot apply option '${key}' of type ${typeof value} with value '${value}' to task. Either specify the option as 'true' or provide a numeric or string value.`
-    );
-    return task;
+    return task[key](value);
   }, task);
 
 /**
