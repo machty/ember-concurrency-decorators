@@ -98,7 +98,7 @@ const applyOptions = (options, task) =>
     assert(
       `ember-concurrency-decorators: Option '${key}' is not a valid function`,
       typeof task[key] === 'function'
-    )
+    );
     if (value === true) {
       return task[key]();
     }
