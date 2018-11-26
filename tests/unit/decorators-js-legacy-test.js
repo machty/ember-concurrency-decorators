@@ -10,49 +10,49 @@ import {
 } from 'ember-concurrency-decorators';
 
 module('Unit | decorators (JS)', function() {
-  test('Native classes (class extends EmberObject)', function(assert) {
+  test('Ember object model (EmberObject.extend)', function(assert) {
     assert.expect(6);
 
-    class Obj extends EmberObject {
+    const Obj = EmberObject.extend({
       @task
-      doStuff = function*() {
+      doStuff: function*() {
         yield;
         return 123;
-      };
+      },
 
       @restartableTask
-      a = function*() {
+      a: function*() {
         yield;
         return 456;
-      };
+      },
 
       @keepLatestTask
-      b = function*() {
+      b: function*() {
         yield;
         return 789;
-      };
+      },
 
       @dropTask
-      c = function*() {
+      c: function*() {
         yield;
         return 12;
-      };
+      },
 
       @enqueueTask
-      d = function*() {
+      d: function*() {
         yield;
         return 34;
-      };
+      },
 
       @task
-      encapsulated = {
+      encapsulated: {
         privateState: 56,
         *perform() {
           yield;
           return this.privateState;
         }
-      };
-    }
+      }
+    });
 
     let obj;
     run(() => {

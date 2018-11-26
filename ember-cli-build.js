@@ -1,10 +1,22 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const Funnel = require('broccoli-funnel');
+
+class EmberConcurrencyDecoratorsAddon extends EmberAddon {
+  getTests() {
+    const testsTree = super.getTests();
+    if (this.options.legacyDecorators) {
+      return testsTree;
+    }
+
+    return new Funnel(testsTree, { exclude: ['**/*-legacy-test.js'] });
+  }
+}
 
 module.exports = function(defaults) {
-  let app = new EmberAddon(defaults, {
-    // Add options here
+  let app = new EmberConcurrencyDecoratorsAddon(defaults, {
+    legacyDecorators: Boolean(process.env.LEGACY_DECORATORS)
   });
 
   /*
