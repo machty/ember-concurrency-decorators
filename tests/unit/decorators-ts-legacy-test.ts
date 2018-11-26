@@ -10,7 +10,7 @@ import {
 } from 'ember-concurrency-decorators';
 
 module('Unit | decorators (TS)', function() {
-  test('a plethora of decorators', function(assert) {
+  test('Basic decorators functionality', function(assert) {
     assert.expect(5);
 
     class Obj extends EmberObject {
@@ -59,5 +59,27 @@ module('Unit | decorators (TS)', function() {
     assert.equal(obj.get('b.last.value'), 789);
     assert.equal(obj.get('c.last.value'), 12);
     assert.equal(obj.get('d.last.value'), 34);
+  });
+
+  test('Encapsulated tasks', function(assert) {
+    assert.expect(1);
+
+    class Obj extends EmberObject {
+      @task
+      encapsulated = {
+        privateState: 56,
+        *perform() {
+          yield;
+          return this.privateState;
+        }
+      };
+    }
+
+    let obj;
+    run(() => {
+      obj = Obj.create();
+      obj.get('encapsulated').perform();
+    });
+    assert.equal(obj.get('encapsulated.last.value'), 56);
   });
 });

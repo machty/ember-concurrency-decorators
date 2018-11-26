@@ -14,7 +14,11 @@ const withDecoratorVariants = scenarios =>
       },
       npm: {
         dependencies: {
-          '@ember-decorators/babel-transforms': '2.1.2'
+          '@ember-decorators/babel-transforms': '^2.1.2',
+          'ember-cli-typescript': null
+        },
+        devDependencies: {
+          'ember-cli-typescript': '^1.5.0'
         }
       }
     })
