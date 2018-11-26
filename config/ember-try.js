@@ -1,6 +1,24 @@
 'use strict';
 
 const getChannelURL = require('ember-source-channel-url');
+const flatMap = require('lodash.flatmap');
+const merge = require('lodash.merge');
+
+const withDecoratorVariants = scenarios =>
+  flatMap(scenarios, scenario => [
+    scenario,
+    merge({}, scenario, {
+      name: `${scenario.name}|legacy-decorators`,
+      env: {
+        LEGACY_DECORATORS: true
+      },
+      npm: {
+        dependencies: {
+          '@ember-decorators/babel-transforms': '2.1.2'
+        }
+      }
+    })
+  ]);
 
 module.exports = function() {
   return Promise.all([
@@ -9,7 +27,7 @@ module.exports = function() {
     getChannelURL('canary')
   ]).then(urls => {
     return {
-      scenarios: [
+      scenarios: withDecoratorVariants([
         {
           name: 'ember-lts-2.12',
           env: {
@@ -82,7 +100,7 @@ module.exports = function() {
             devDependencies: {}
           }
         }
-      ]
+      ])
     };
   });
 };

@@ -22,6 +22,7 @@ jobs:
   fail_fast: true
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-canary|legacy-decorators
 
   include:
     # runs linting and tests with current locked deps
@@ -37,11 +38,17 @@ jobs:
     # as well as latest stable release (bonus points to beta/canary)
     - stage: 'Additional Tests'
       env: EMBER_TRY_SCENARIO=ember-lts-2.12
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.12|legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-lts-2.16
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.16|legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-lts-2.18
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.18|legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-release
+    - env: EMBER_TRY_SCENARIO=ember-release|legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-beta
+    - env: EMBER_TRY_SCENARIO=ember-beta|legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-canary|legacy-decorators
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
