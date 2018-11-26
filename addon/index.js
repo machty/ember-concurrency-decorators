@@ -115,10 +115,10 @@ const applyOptions = (options, task) =>
  * @private
  */
 const createDecorator = (propertyCreator, baseOptions = {}) =>
-  computedDecoratorWithParams((target, key, desc, [userOptions]) =>
+  computedDecoratorWithParams(({ descriptor }, [userOptions]) =>
     applyOptions(
       Object.assign({}, baseOptions, userOptions),
-      propertyCreator(desc)
+      propertyCreator(descriptor)
     )
   );
 
