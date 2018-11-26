@@ -27,13 +27,9 @@ import { computedDecoratorWithRequiredParams } from '@ember-decorators/utils/com
  * @param {string} taskName the name of the task to read a value from
  */
 export default computedDecoratorWithRequiredParams(function(
-  { descriptor },
+  { initializer },
   [task]
 ) {
-  const { initializer } = descriptor;
-  delete descriptor.initializer;
-  debugger;
-
   return computed(`${task}.lastSuccessful.value`, function() {
     const lastInstance = get(this, `${task}.lastSuccessful`);
 
