@@ -8,7 +8,7 @@ const withDecoratorVariants = scenarios =>
   flatMap(scenarios, scenario => [
     scenario,
     merge({}, scenario, {
-      name: `${scenario.name}|legacy-decorators`,
+      name: `${scenario.name}-legacy-decorators`,
       env: {
         LEGACY_DECORATORS: true
       },
