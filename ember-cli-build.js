@@ -5,12 +5,11 @@ const Funnel = require('broccoli-funnel');
 
 class EmberConcurrencyDecoratorsAddon extends EmberAddon {
   getTests() {
-    const testsTree = super.getTests();
-    if (this.options.legacyDecorators) {
-      return testsTree;
-    }
+    const exclude = this.options.legacyDecorators
+      ? ['**/*-stage-2-test.js']
+      : ['**/*-legacy-test.js'];
 
-    return new Funnel(testsTree, { exclude: ['**/*-legacy-test.js'] });
+    return new Funnel(super.getTests(), { exclude });
   }
 }
 
