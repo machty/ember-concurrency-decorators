@@ -14,7 +14,7 @@ module('Unit | last-value', function(hooks) {
       @task
       *task() {
         return yield 'foo';
-      };
+      }
 
       @lastValue('task')
       value;
@@ -42,7 +42,7 @@ module('Unit | last-value', function(hooks) {
       @task
       *task() {
         return yield 'foo';
-      };
+      }
 
       @lastValue('task')
       value = 'default value';

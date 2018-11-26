@@ -2,12 +2,12 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  parser: 'typescript-eslint-parser',
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module'
   },
-  plugins: ['ember', 'prettier'],
+  plugins: ['typescript', 'ember', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:ember/recommended',
@@ -16,8 +16,14 @@ module.exports = {
   env: {
     browser: true
   },
-  rules: {},
+  rules: {
+    'typescript/no-unused-vars': 'error'
+  },
   overrides: [
+    {
+      parser: 'babel-eslint',
+      files: ['tests/unit/decorators-js-legacy-test.js']
+    },
     // node files
     {
       files: [

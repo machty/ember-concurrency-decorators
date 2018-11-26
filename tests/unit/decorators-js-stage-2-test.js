@@ -18,31 +18,31 @@ module('Unit | decorators (JS)', function() {
       *doStuff() {
         yield;
         return 123;
-      };
+      }
 
       @restartableTask
       *a() {
         yield;
         return 456;
-      };
+      }
 
       @keepLatestTask
       *b() {
         yield;
         return 789;
-      };
+      }
 
       @dropTask
       *c() {
         yield;
         return 12;
-      };
+      }
 
       @enqueueTask
       *d() {
         yield;
         return 34;
-      };
+      }
     }
 
     let obj;
