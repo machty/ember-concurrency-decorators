@@ -32,8 +32,8 @@ export { default as lastValue } from './last-value';
  * @private
  */
 function extractValue(desc) {
-  if ('value' in desc) {
-    return desc.value;
+  if ('value' in desc.descriptor) {
+    return desc.descriptor.value;
   }
   if (typeof desc.initializer === 'function') {
     return desc.initializer();
@@ -53,7 +53,7 @@ function extractValue(desc) {
 function createTaskFromDescriptor(desc) {
   assert(
     'ember-concurrency-decorators: Getters and setters are not supported for tasks.',
-    desc.writable
+    desc.descriptor.writable
   );
 
   const value = extractValue(desc);
@@ -77,7 +77,7 @@ function createTaskFromDescriptor(desc) {
 function createTaskGroupFromDescriptor(desc) {
   assert(
     'ember-concurrency-decorators: Getters and setters are not supported for task groups.',
-    desc.writable
+    desc.descriptor.writable
   );
   assert(
     'ember-concurrency-decorators: Task groups can not accept values.',
@@ -115,10 +115,10 @@ const applyOptions = (options, task) =>
  * @private
  */
 const createDecorator = (propertyCreator, baseOptions = {}) =>
-  computedDecoratorWithParams(({ descriptor }, [userOptions]) =>
+  computedDecoratorWithParams((desc, [userOptions]) =>
     applyOptions(
       Object.assign({}, baseOptions, userOptions),
-      propertyCreator(descriptor)
+      propertyCreator(desc)
     )
   );
 

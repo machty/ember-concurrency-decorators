@@ -1,4 +1,4 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
 import { task } from 'ember-concurrency-decorators';
 import { lastValue } from 'ember-concurrency-decorators';

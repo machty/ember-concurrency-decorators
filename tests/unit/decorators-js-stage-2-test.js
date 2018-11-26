@@ -1,4 +1,4 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import {
@@ -61,7 +61,7 @@ module('Unit | decorators (JS)', function() {
     assert.equal(obj.get('d.last.value'), 34);
   });
 
-  skip('Encapsulated tasks', function(assert) {
+  test('Encapsulated tasks', function(assert) {
     assert.expect(1);
 
     class Obj extends EmberObject {
