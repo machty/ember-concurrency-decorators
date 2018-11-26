@@ -9,8 +9,8 @@ import inRunLoop, {
 module('Unit | last-value', function(hooks) {
   inRunLoop(hooks);
 
-  hooks.beforeEach(function () {
-    this.ObjectWithTask = class ObjectWithTask extends EmberObject {
+  test('without a default value', function(assert) {
+    class ObjectWithTask extends EmberObject {
       @task
       *task() {
         return yield 'foo';
@@ -20,44 +20,49 @@ module('Unit | last-value', function(hooks) {
       value;
     }
 
-    this.ObjectWithTaskDefaultValue = class ObjectWithTaskDefaultValue extends ObjectWithTask {
+    const instance = ObjectWithTask.create();
+    assert.strictEqual(
+      instance.get('value'),
+      undefined,
+      'it returns nothing if the task has not been performed'
+    );
+
+    instance.get('task').perform();
+    nextLoop();
+
+    assert.strictEqual(
+      instance.get('value'),
+      'foo',
+      'returning the last successful value'
+    );
+  });
+
+  test('with a default value', function(assert) {
+    class ObjectWithTaskDefaultValue extends EmberObject {
+      @task
+      *task() {
+        return yield 'foo';
+      };
+
       @lastValue('task')
       value = 'default value';
     }
-  });
 
+    const instance = ObjectWithTaskDefaultValue.create();
 
-  module('without a default value', function() {
-    skip('it returns nothing if the task has not been performed', function(assert) {
-      const instance = this.ObjectWithTask.create();
+    assert.strictEqual(
+      instance.get('value'),
+      'default value',
+      'it returns the default value if the task has not been performed'
+    );
 
-      assert.deepEqual(instance.get('value'), undefined);
-    });
+    instance.get('task').perform();
+    nextLoop();
 
-    skip('returning the last successful value', function(assert) {
-      const instance = this.ObjectWithTask.create();
-
-      instance.get('task').perform();
-      nextLoop();
-
-      assert.equal(instance.get('value'), 'foo');
-    });
-  });
-
-  module('with a default value', function() {
-    skip('it returns the default value if the task has not been performed', function(assert) {
-      const instance = this.ObjectWithTaskDefaultValue.create();
-
-      assert.equal(instance.get('value'), 'default value');
-    });
-
-    skip('returning the last successful value', function(assert) {
-      const instance = this.ObjectWithTaskDefaultValue.create();
-
-      instance.get('task').perform();
-      nextLoop();
-
-      assert.equal(instance.get('value'), 'foo');
-    });
+    assert.equal(
+      instance.get('value'),
+      'foo',
+      'returning the last successful value'
+    );
   });
 });
