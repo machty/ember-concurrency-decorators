@@ -9,7 +9,6 @@
 [![dependencies](https://img.shields.io/david/machty/ember-concurrency-decorators.svg)](https://david-dm.org/machty/ember-concurrency-decorators)
 [![devDependencies](https://img.shields.io/david/dev/machty/ember-concurrency-decorators.svg)](https://david-dm.org/machty/ember-concurrency-decorators)
 
-
 This Ember addon lets you use the
 [decorator syntax](https://github.com/tc39/proposal-decorators)
 for declaring/configuring
@@ -84,7 +83,7 @@ doStuff = function*() {
 For your convenience, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
 | Shorthand          | Equivalent                     |
-|--------------------|--------------------------------|
+| ------------------ | ------------------------------ |
 | `@restartableTask` | `@task({ restartable: true })` |
 | `@dropTask`        | `@task({ drop: true })`        |
 | `@keepLatestTask`  | `@task({ keepLatest: true })`  |
@@ -142,7 +141,7 @@ You can also pass further options to the task group decorator:
 As for `@task`, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
 | Shorthand               | Equivalent                          |
-|-------------------------|-------------------------------------|
+| ----------------------- | ----------------------------------- |
 | `@restartableTaskGroup` | `@taskGroup({ restartable: true })` |
 | `@dropTaskGroup`        | `@taskGroup({ drop: true })`        |
 | `@keepLatestTaskGroup`  | `@taskGroup({ keepLatest: true })`  |
@@ -220,6 +219,17 @@ this.doStuff.perform();
 ```
 
 You need to use this assignment / initializer syntax instead of "proper" generator methods, because of a bug in the `loose` mode of [`@babel/plugin-proposal-decorators`](https://babeljs.io/docs/en/next/babel-plugin-proposal-decorators.html), which ember-decorators depends on. When [ember-decorators adds support for stage 2 decorators](https://github.com/ember-decorators/ember-decorators/issues/278), you will be able to use the generator method syntax as well. 🎉
+
+#### Compatibility with legacy decorators and decorating objects
+
+ember-concurrency-decorators is tested against legacy and the new "stage 2"
+decorators. This means that we are running tests with:
+
+- [`@ember-decorators/babel-transforms@^3.1.0`](https://www.npmjs.com/package/@ember-decorators/babel-transforms/v/3.1.0): stage 2 decorators using [`@babel/plugin-proposal-decorators`](https://github.com/babel/babel/tree/master/packages/babel-plugin-proposal-decorators)
+- [`@ember-decorators/babel-transforms@2.1.2`](https://www.npmjs.com/package/@ember-decorators/babel-transforms/v/2.1.2): legacy decorators using [`babel-plugin-transform-decorators-legacy`](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy)
+
+If you want to decorate object literal (which you should not), then you need to
+use `@ember-decorators/babel-transforms@2.1.2`.
 
 ## License
 
