@@ -2,7 +2,8 @@ import {
   task as createTaskProperty,
   taskGroup as createTaskGroupProperty
 } from 'ember-concurrency';
-import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
+import { decoratorWithParams } from '@ember-decorators/utils/decorator';
+import { computedDecorator } from '@ember-decorators/utils/computed';
 import { assert } from '@ember/debug';
 
 export { default as lastValue } from './last-value';
@@ -36,7 +37,10 @@ function extractValue(desc) {
     return desc.descriptor.value;
   }
   if (typeof desc.initializer === 'function') {
-    return desc.initializer();
+    const { initializer } = desc;
+    delete desc.initializer;
+
+    return initializer();
   }
 
   return null;
@@ -115,12 +119,17 @@ const applyOptions = (options, task) =>
  * @private
  */
 const createDecorator = (propertyCreator, baseOptions = {}) =>
-  computedDecoratorWithParams((desc, [userOptions]) =>
-    applyOptions(
-      Object.assign({}, baseOptions, userOptions),
-      propertyCreator(desc)
-    )
-  );
+  decoratorWithParams((desc, [userOptions] = []) => {
+    const { initializer } = desc;
+    delete desc.initializer;
+
+    return computedDecorator(desc =>
+      applyOptions(
+        Object.assign({}, baseOptions, userOptions),
+        propertyCreator({ ...desc, initializer })
+      )
+    )(desc);
+  });
 
 /**
  * Turns the decorated generator function into a task.
