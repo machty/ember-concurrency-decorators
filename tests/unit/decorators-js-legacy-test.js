@@ -3,6 +3,7 @@ import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import {
   task,
+  taskGroup,
   restartableTask,
   dropTask,
   keepLatestTask,
@@ -70,5 +71,34 @@ module('Unit | decorators (JS) [legacy]', function() {
     assert.equal(obj.get('c.last.value'), 12);
     assert.equal(obj.get('d.last.value'), 34);
     assert.equal(obj.get('encapsulated.last.value'), 56);
+  });
+
+  test('@taskGroup', function(assert) {
+    assert.expect(2);
+
+    class Obj extends EmberObject {
+      @taskGroup
+      group;
+
+      @task({ group: 'group' })
+      a = function*() {
+        yield;
+        return 123;
+      };
+
+      @task({ group: 'group' })
+      b = function*() {
+        yield;
+        return 456;
+      };
+    }
+
+    let obj;
+    run(() => {
+      obj = Obj.create();
+      assert.rejects(obj.get('a').perform(), /was canceled/);
+      assert.rejects(obj.get('b').perform(), /was canceled/);
+      obj.get('group').cancelAll();
+    });
   });
 });
