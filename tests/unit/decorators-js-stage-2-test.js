@@ -3,14 +3,15 @@ import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import {
   task,
+  taskGroup,
   restartableTask,
   dropTask,
   keepLatestTask,
   enqueueTask
 } from 'ember-concurrency-decorators';
 
-module('Unit | decorators (TS)', function() {
-  test('a plethora of decorators', function(assert) {
+module('Unit | decorators (JS)', function() {
+  test('Basic decorators functionality', function(assert) {
     assert.expect(5);
 
     class Obj extends EmberObject {
@@ -59,5 +60,56 @@ module('Unit | decorators (TS)', function() {
     assert.equal(obj.get('b.last.value'), 789);
     assert.equal(obj.get('c.last.value'), 12);
     assert.equal(obj.get('d.last.value'), 34);
+  });
+
+  test('Encapsulated tasks', function(assert) {
+    assert.expect(1);
+
+    class Obj extends EmberObject {
+      @task
+      encapsulated = {
+        privateState: 56,
+        *perform() {
+          yield;
+          return this.privateState;
+        }
+      };
+    }
+
+    let obj;
+    run(() => {
+      obj = Obj.create();
+      obj.get('encapsulated').perform();
+    });
+    assert.equal(obj.get('encapsulated.last.value'), 56);
+  });
+
+  test('@taskGroup', function(assert) {
+    assert.expect(2);
+
+    class Obj extends EmberObject {
+      @taskGroup
+      group;
+
+      @task({ group: 'group' })
+      a = function*() {
+        yield;
+        return 123;
+      };
+
+      @task({ group: 'group' })
+      b = function*() {
+        yield;
+        return 456;
+      };
+    }
+
+    let obj;
+    run(() => {
+      obj = Obj.create();
+      assert.rejects(obj.get('a').perform(), /was canceled/);
+      assert.rejects(obj.get('b').perform(), /was canceled/);
+      obj.get('group').cancelAll();
+    });
   });
 });
