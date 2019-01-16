@@ -25,7 +25,9 @@ type ExtractPropertyNamesOfType<T, S> = {
   [K in keyof T]: T[K] extends S ? K : never
 }[keyof T];
 
-type GeneratorFn = () => IterableIterator<any>;
+type GeneratorFn<Args extends any[] = any[]> = (
+  ...args: Args
+) => IterableIterator<any>;
 
 type TaskMethodKeys<T> = ExtractPropertyNamesOfType<T, GeneratorFn>;
 type EncapsulatedTaskKeys<T> = ExtractPropertyNamesOfType<
