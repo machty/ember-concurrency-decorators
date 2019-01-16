@@ -52,10 +52,10 @@ export function task<O extends object>(
   propertyKey: TaskMethodKeys<O>,
   descriptor: PropertyDescriptor
 ): void;
-// export function task<O extends object>(
-//   target: O,
-//   propertyKey: EncapsulatedTaskKeys<O>
-// ): void;
+export function task<O extends object>(
+  target: O,
+  propertyKey: EncapsulatedTaskKeys<O>
+): void;
 export function task<O extends object>(options: TaskOptions): TaskDecorator<O>;
 
 export function restartableTask<O extends object>(
@@ -63,10 +63,10 @@ export function restartableTask<O extends object>(
   propertyKey: TaskMethodKeys<O>,
   descriptor: PropertyDescriptor
 ): void;
-// export function restartableTask<O extends object>(
-//   target: O,
-//   propertyKey: EncapsulatedTaskKeys<O>
-// ): void;
+export function restartableTask<O extends object>(
+  target: O,
+  propertyKey: EncapsulatedTaskKeys<O>
+): void;
 export function restartableTask<O extends object>(
   options: TaskOptions
 ): TaskDecorator<O>;
@@ -76,10 +76,10 @@ export function dropTask<O extends object>(
   propertyKey: TaskMethodKeys<O>,
   descriptor: PropertyDescriptor
 ): void;
-// export function dropTask<O extends object>(
-//   target: O,
-//   propertyKey: EncapsulatedTaskKeys<O>
-// ): void;
+export function dropTask<O extends object>(
+  target: O,
+  propertyKey: EncapsulatedTaskKeys<O>
+): void;
 export function dropTask<O extends object>(
   options: TaskOptions
 ): TaskDecorator<O>;
@@ -89,10 +89,10 @@ export function keepLatestTask<O extends object>(
   propertyKey: TaskMethodKeys<O>,
   descriptor: PropertyDescriptor
 ): void;
-// export function keepLatestTask<O extends object>(
-//   target: O,
-//   propertyKey: EncapsulatedTaskKeys<O>
-// ): void;
+export function keepLatestTask<O extends object>(
+  target: O,
+  propertyKey: EncapsulatedTaskKeys<O>
+): void;
 export function keepLatestTask<O extends object>(
   options: TaskOptions
 ): TaskDecorator<O>;
@@ -102,10 +102,10 @@ export function enqueueTask<O extends object>(
   propertyKey: TaskMethodKeys<O>,
   descriptor: PropertyDescriptor
 ): void;
-// export function enqueueTask<O extends object>(
-//   target: O,
-//   propertyKey: EncapsulatedTaskKeys<O>
-// ): void;
+export function enqueueTask<O extends object>(
+  target: O,
+  propertyKey: EncapsulatedTaskKeys<O>
+): void;
 export function enqueueTask<O extends object>(
   options: TaskOptions
 ): TaskDecorator<O>;
