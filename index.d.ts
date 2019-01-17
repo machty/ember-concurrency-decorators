@@ -21,13 +21,32 @@ interface TaskOptions {
   group?: string;
 }
 
+export function asTask<Args extends any[], R>(
+  task: GeneratorFn<Args, R>
+): Task<Args, Exclude<R, Promise<any>>>;
+export function asTask<Args extends any[], R>(task: {
+  perform: GeneratorFn<Args, R>;
+}): Task<Args, Exclude<R, Promise<any>>>;
+
+export interface Task<Args extends any[], R> {
+  perform(...args: Args): Promise<R>;
+  lastSuccessful?: {
+    value: R;
+  };
+  // ...
+}
+export interface TaskGroup {
+  cancelAll(): void;
+  // ...
+}
+
+type GeneratorFn<Args extends any[] = any[], R = any> = (
+  ...args: Args
+) => IterableIterator<R>;
+
 type ExtractPropertyNamesOfType<T, S> = {
   [K in keyof T]: T[K] extends S ? K : never
 }[keyof T];
-
-type GeneratorFn<Args extends any[] = any[]> = (
-  ...args: Args
-) => IterableIterator<any>;
 
 type TaskMethodKeys<T> = ExtractPropertyNamesOfType<T, GeneratorFn>;
 type EncapsulatedTaskKeys<T> = ExtractPropertyNamesOfType<
