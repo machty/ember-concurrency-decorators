@@ -21,6 +21,33 @@ const withDecoratorVariants = scenarios =>
           'ember-cli-typescript': '^1.5.0'
         }
       }
+    }),
+    merge({}, scenario, {
+      name: `${scenario.name}-e-d-v3`,
+      npm: {
+        dependencies: {
+          '@ember-decorators/babel-transforms': '^3.1.2',
+          '@ember-decorators/utils': '^3.1.2'
+        }
+      }
+    }),
+    merge({}, scenario, {
+      name: `${scenario.name}-e-d-v4`,
+      npm: {
+        dependencies: {
+          '@ember-decorators/babel-transforms': '^4.0.0',
+          '@ember-decorators/utils': '^4.0.0'
+        }
+      }
+    }),
+    merge({}, scenario, {
+      name: `${scenario.name}-e-d-v5`,
+      npm: {
+        dependencies: {
+          '@ember-decorators/babel-transforms': '^5.0.0',
+          '@ember-decorators/utils': '^5.0.0'
+        }
+      }
     })
   ]);
 
