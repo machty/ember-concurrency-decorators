@@ -660,15 +660,16 @@
     ember-cli-babel-plugin-helpers "^1.0.0"
     ember-cli-version-checker "^2.1.0"
 
-"@ember-decorators/utils@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@ember-decorators/utils/-/utils-3.1.2.tgz#ab15211577b4267ba5d5e35e704206738a6aa6ff"
-  integrity sha512-1+i1+BHz1QXW5zzsJTEmR+wVcLm3k1bTb1a37k1X7XXSxDyU7MRo1CnafR4H+70qKlJPnfxyeWd9jHpNnuLrSQ==
+"@ember-decorators/utils@^3.1.2 || ^4.0.0 || ^5.0.0":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@ember-decorators/utils/-/utils-5.1.1.tgz#fe99e642f28184e5bf31d580a99d7c2cebea86b3"
+  integrity sha512-c7U+FY8XNi9blwv4apzrPpw2YMPVf5MjDZA2HUIyNvJmEVoFib8jTbBE05F6A/UWuzVflc36drICVtv2n/clIg==
   dependencies:
-    babel-plugin-debug-macros "^0.1.11"
+    babel-plugin-debug-macros "^0.2.0"
     ember-cli-babel "^7.1.3"
     ember-cli-version-checker "^2.1.2"
     ember-compatibility-helpers "^1.1.2"
+    semver "^5.6.0"
 
 "@ember/optional-features@^0.7.0":
   version "0.7.0"
@@ -1412,7 +1413,7 @@ babel-plugin-check-es2015-constants@^6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-debug-macros@^0.1.10, babel-plugin-debug-macros@^0.1.11:
+babel-plugin-debug-macros@^0.1.10:
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/babel-plugin-debug-macros/-/babel-plugin-debug-macros-0.1.11.tgz#6c562bf561fccd406ce14ab04f42c218cf956605"
   integrity sha512-hZw5qNNGAR02Y+yBUrtsnJHh8OXavkayPRqKGAXnIm4t5rWVpj3ArwsC7TWdpZsBguQvHAeyTxZ7s23yY60HHg==
@@ -7305,7 +7306,7 @@ sane@^4.0.0:
     walker "~1.0.5"
     watch "~0.18.0"
 
-"semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0, semver@^5.4.1, semver@^5.5.0, semver@^5.5.1:
+"semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0, semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
