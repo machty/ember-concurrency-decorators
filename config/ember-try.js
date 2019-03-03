@@ -41,11 +41,20 @@ const withDecoratorVariants = scenarios =>
       }
     }),
     merge({}, scenario, {
-      name: `${scenario.name}-e-d-v5`,
+      name: `${scenario.name}-e-d-v5.1.2`,
       npm: {
         dependencies: {
-          '@ember-decorators/babel-transforms': '^5.0.0',
-          '@ember-decorators/utils': '^5.0.0'
+          '@ember-decorators/babel-transforms': '5.1.2',
+          '@ember-decorators/utils': '^5.1.2'
+        }
+      }
+    }),
+    merge({}, scenario, {
+      name: `${scenario.name}-e-d-v5.1.4`,
+      npm: {
+        dependencies: {
+          '@ember-decorators/babel-transforms': '^5.1.4',
+          '@ember-decorators/utils': '^5.1.4  '
         }
       }
     })

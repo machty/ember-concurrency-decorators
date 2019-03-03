@@ -123,7 +123,7 @@ const createDecorator = (propertyCreator, baseOptions = {}) =>
     const { initializer } = desc;
     delete desc.initializer;
 
-    return computedDecorator(desc =>
+    return computedDecorator(() =>
       applyOptions(
         Object.assign({}, baseOptions, userOptions),
         propertyCreator({ ...desc, initializer })

@@ -2,7 +2,7 @@ language: node_js
 node_js:
   # we recommend testing addons with the same minimum supported node version as Ember CLI
   # so that your addon works for all apps
-  - '6'
+  - "6"
 
 sudo: required # Required for the ENOSPC fix
 dist: trusty
@@ -29,12 +29,16 @@ jobs:
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-canary
     - env: EMBER_TRY_SCENARIO=ember-canary-legacy-decorators
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v3
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v4
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v5.1.2
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v5.1.4
 
   include:
     # runs linting and tests with current locked deps
 
-    - stage: 'Tests'
-      name: 'Tests'
+    - stage: "Tests"
+      name: "Tests"
       script:
         - yarn lint:hbs
         - yarn lint:js
@@ -43,7 +47,7 @@ jobs:
 
     # we recommend new addons test the current and previous LTS
     # as well as latest stable release (bonus points to beta/canary)
-    - stage: 'Additional Tests'
+    - stage: "Additional Tests"
       env: EMBER_TRY_SCENARIO=ember-lts-2.12
     - env: EMBER_TRY_SCENARIO=ember-lts-2.12-legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-lts-2.16
@@ -54,22 +58,26 @@ jobs:
     - env: EMBER_TRY_SCENARIO=ember-lts-3.4-legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-lts-3.4-e-d-v3
     - env: EMBER_TRY_SCENARIO=ember-lts-3.4-e-d-v4
-    - env: EMBER_TRY_SCENARIO=ember-lts-3.4-e-d-v5
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.4-e-d-v5.1.2
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.4-e-d-v5.1.4
     - env: EMBER_TRY_SCENARIO=ember-release
     - env: EMBER_TRY_SCENARIO=ember-release-legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-release-e-d-v3
     - env: EMBER_TRY_SCENARIO=ember-release-e-d-v4
-    - env: EMBER_TRY_SCENARIO=ember-release-e-d-v5
+    - env: EMBER_TRY_SCENARIO=ember-release-e-d-v5.1.2
+    - env: EMBER_TRY_SCENARIO=ember-release-e-d-v5.1.4
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-beta-legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-beta-e-d-v3
     - env: EMBER_TRY_SCENARIO=ember-beta-e-d-v4
-    - env: EMBER_TRY_SCENARIO=ember-beta-e-d-v5
+    - env: EMBER_TRY_SCENARIO=ember-beta-e-d-v5.1.2
+    - env: EMBER_TRY_SCENARIO=ember-beta-e-d-v5.1.4
     - env: EMBER_TRY_SCENARIO=ember-canary
     - env: EMBER_TRY_SCENARIO=ember-canary-legacy-decorators
     - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v3
     - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v4
-    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v5
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v5.1.2
+    - env: EMBER_TRY_SCENARIO=ember-canary-e-d-v5.1.4
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
