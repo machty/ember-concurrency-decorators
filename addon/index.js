@@ -32,18 +32,42 @@ export { default as lastValue } from './last-value';
  * @returns {object|null}
  * @private
  */
-function extractValue(desc) {
-  if ('value' in desc.descriptor) {
-    return desc.descriptor.value;
-  }
-  if (typeof desc.initializer === 'function') {
-    const { initializer } = desc;
-    delete desc.initializer;
+function extractValue(desc, allowNoInitializer = false) {
+  switch (desc.kind) {
+    case 'method': {
+      assert(
+        `'${desc.key}' has to be a method on the prototype, not 'static'.`,
+        desc.placement === 'prototype'
+      );
+      const { value } = desc.descriptor;
+      delete desc.descriptor.value;
+      desc.kind = 'field';
 
-    return initializer();
-  }
+      // This somehow happens for Ember pre 3.9 🤷🏼‍
+      if (desc.initializer) {
+        const { initializer } = desc;
+        delete desc.initializer;
+        return initializer();
+      }
 
-  return null;
+      return value;
+    }
+    case 'field': {
+      assert(
+        `'${desc.key}' has to be a field on the class instance, not 'static'.`,
+        desc.placement === 'own'
+      );
+      assert(
+        `'${desc.key}' has no initializer.`,
+        allowNoInitializer || typeof desc.initializer === 'function'
+      );
+      const { initializer } = desc;
+      delete desc.initializer;
+      return initializer ? initializer() : null;
+    }
+    default:
+      assert(`Unsupported kind '${desc.kind}' for '${desc.key}'.`, false);
+  }
 }
 
 /**
@@ -85,7 +109,7 @@ function createTaskGroupFromDescriptor(desc) {
   );
   assert(
     'ember-concurrency-decorators: Task groups can not accept values.',
-    !extractValue(desc)
+    !extractValue(desc, true)
   );
   return createTaskGroupProperty();
 }
