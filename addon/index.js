@@ -42,6 +42,14 @@ function extractValue(desc, allowNoInitializer = false) {
       const { value } = desc.descriptor;
       delete desc.descriptor.value;
       desc.kind = 'field';
+
+      // This somehow happens for Ember pre 3.9 🤷🏼‍
+      if (desc.initializer) {
+        const { initializer } = desc;
+        delete desc.initializer;
+        return initializer();
+      }
+
       return value;
     }
     case 'field': {
