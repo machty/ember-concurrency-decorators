@@ -17,7 +17,7 @@ module('Unit | last-value', function(hooks) {
       };
 
       @lastValue('task')
-      value;
+      value?: 'foo';
     }
 
     const instance = ObjectWithTask.create();
@@ -27,6 +27,7 @@ module('Unit | last-value', function(hooks) {
       'it returns nothing if the task has not been performed'
     );
 
+    // @ts-ignore
     instance.get('task').perform();
     nextLoop();
 
@@ -56,6 +57,7 @@ module('Unit | last-value', function(hooks) {
       'it returns the default value if the task has not been performed'
     );
 
+    // @ts-ignore
     instance.get('task').perform();
     nextLoop();
 

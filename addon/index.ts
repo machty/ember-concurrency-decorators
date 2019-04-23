@@ -1,6 +1,8 @@
 import {
   task as createTaskProperty,
-  taskGroup as createTaskGroupProperty
+  taskGroup as createTaskGroupProperty,
+  TaskProperty,
+  TaskGroupProperty
 } from 'ember-concurrency';
 import {
   decoratorWithParams,
@@ -10,44 +12,26 @@ import { assert } from '@ember/debug';
 
 export { default as lastValue } from './last-value';
 
-interface TaskOptions {
-  restartable?: true;
-  drop?: true;
-  keepLatest?: true;
-  enqueue?: true;
-  evented?: true;
-  debug?: true;
-  maxConcurrency?: number;
-  on?: string;
-  cancelOn?: string;
-  group?: string;
-}
-interface TaskGroupOptions {
-  restartable?: true;
-  drop?: true;
-  keepLatest?: true;
-  enqueue?: true;
-  maxConcurrency?: number;
-  cancelOn?: string;
-  group?: string;
-}
-
-type Options = TaskOptions | TaskGroupOptions;
-
-type TaskProperty = {
-  [option in keyof Required<TaskOptions>]: (
-    ...val: Required<TaskOptions>[option] extends true
-      ? []
-      : [Required<TaskOptions>[option]]
-  ) => TaskProperty
+type TaskOptions = {
+  [option in keyof TaskProperty]?: Parameters<TaskProperty[option]> extends [
+    infer P
+  ]
+    ? P
+    : true
 };
-type TaskGroupProperty = {
-  [option in keyof Required<TaskGroupOptions>]: (
-    ...val: Required<TaskGroupOptions>[option] extends true
-      ? []
-      : [Required<TaskGroupOptions>[option]]
-  ) => TaskGroupProperty
+type TaskGroupOptions = {
+  [option in keyof TaskGroupProperty]?: Parameters<
+    TaskGroupProperty[option]
+  > extends [infer P]
+    ? P
+    : true
 };
+
+type Decorator = (
+  ...args: Parameters<MethodDecorator>
+) => Exclude<ReturnType<MethodDecorator>, void>;
+
+type ObjectValues<O> = O extends { [s: string]: infer V } ? V : never;
 
 /**
  * This utility function assures compatibility with the Ember object model style
@@ -121,20 +105,35 @@ function createTaskGroupFromDescriptor(_desc: DecoratorDescriptor) {
  * @param {TaskProperty|TaskGroupProperty} task
  * @private
  */
-const applyOptions = (
-  options: Options,
-  task: TaskProperty | TaskGroupProperty
-) =>
-  Object.entries(options).reduce((task, [key, value]) => {
-    assert(
-      `ember-concurrency-decorators: Option '${key}' is not a valid function`,
-      typeof task[key] === 'function'
-    );
-    if (value === true) {
-      return task[key]();
-    }
-    return task[key](value);
-  }, task);
+function applyOptions(
+  options: TaskGroupOptions,
+  task: TaskGroupProperty
+): TaskGroupProperty & Decorator;
+function applyOptions(
+  options: TaskOptions,
+  task: TaskProperty
+): TaskProperty & Decorator {
+  return Object.entries(options).reduce(
+    (
+      task,
+      [key, value]: [
+        keyof typeof options,
+        ObjectValues<Required<typeof options>>
+      ]
+    ) => {
+      assert(
+        `ember-concurrency-decorators: Option '${key}' is not a valid function`,
+        typeof task[key] === 'function'
+      );
+      if (value === true) {
+        return (task[key] as () => typeof task)();
+      }
+      return (task[key] as (o: typeof value) => typeof task)(value);
+    },
+    task
+    // The CP decorator gets executed in `createDecorator`
+  ) as TaskProperty & Decorator;
+}
 
 /**
  * Creates a decorator function that transforms the decorated property using the
@@ -149,17 +148,19 @@ const createDecorator = (
   propertyCreator: (
     desc: DecoratorDescriptor
   ) => TaskProperty | TaskGroupProperty,
-  baseOptions: Options = {}
+  baseOptions: TaskOptions | TaskGroupOptions = {}
 ) =>
-  decoratorWithParams((target, key, desc, [userOptions]: [Options?] = []) => {
-    const { initializer } = desc;
-    delete desc.initializer;
+  decoratorWithParams<[typeof baseOptions?], object>(
+    (target, key, desc, [userOptions] = []) => {
+      const { initializer } = desc;
+      delete desc.initializer;
 
-    return applyOptions(
-      Object.assign({}, baseOptions, userOptions),
-      propertyCreator({ ...desc, initializer })
-    )(target, key, desc);
-  }) as (PropertyDecorator &
+      return applyOptions(
+        Object.assign({}, baseOptions, userOptions),
+        propertyCreator({ ...desc, initializer })
+      )(target, key, desc);
+    }
+  ) as (PropertyDecorator &
     ((options: Record<string, any>) => PropertyDecorator));
 
 /**
