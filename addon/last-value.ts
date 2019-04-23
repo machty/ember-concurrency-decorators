@@ -1,6 +1,5 @@
 import { get, computed } from '@ember/object';
-import { decorator } from '@ember-decorators/utils/decorator';
-import { computedDecorator } from '@ember-decorators/utils/computed';
+import { decoratorWithRequiredParams } from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 
 /**
@@ -28,28 +27,34 @@ import { assert } from '@ember/debug';
  * @function
  * @param {string} taskName the name of the task to read a value from
  */
-export default function lastValue(taskName) {
+export default decoratorWithRequiredParams(function lastValue<
+  Target extends object
+>(
+  target: Target,
+  key: keyof Target,
+  desc: PropertyDescriptor & { initializer?: () => any },
+  [taskName]: [string]
+) {
   assert(
     `ember-concurrency-decorators: @lastValue expects a task name as the first parameter.`,
     typeof taskName === 'string'
   );
 
-  return decorator(desc => {
-    const { initializer } = desc;
-    delete desc.initializer;
+  const { initializer } = desc;
+  delete desc.initializer;
 
-    return computedDecorator(() =>
-      computed(`${taskName}.lastSuccessful`, function() {
-        const lastInstance = get(this, `${taskName}.lastSuccessful`);
+  const cp = computed(`${taskName}.lastSuccessful`, function() {
+    const lastInstance = get(this, `${taskName}.lastSuccessful`);
 
-        if (lastInstance) {
-          return get(lastInstance, 'value');
-        }
+    if (lastInstance) {
+      return get(lastInstance, 'value');
+    }
 
-        if (initializer) {
-          return initializer.call(this);
-        }
-      })
-    )(desc);
+    if (initializer) {
+      return initializer.call(this);
+    }
   });
-}
+
+  // @ts-ignore
+  return cp(target, key, desc);
+}) as (taskName: string) => PropertyDecorator;

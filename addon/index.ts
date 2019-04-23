@@ -1,12 +1,37 @@
 import {
   task as createTaskProperty,
-  taskGroup as createTaskGroupProperty
+  taskGroup as createTaskGroupProperty,
+  TaskProperty,
+  TaskGroupProperty
 } from 'ember-concurrency';
-import { decoratorWithParams } from '@ember-decorators/utils/decorator';
-import { computedDecorator } from '@ember-decorators/utils/computed';
+import {
+  decoratorWithParams,
+  DecoratorDescriptor
+} from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 
 export { default as lastValue } from './last-value';
+
+type TaskOptions = {
+  [option in keyof TaskProperty]?: Parameters<TaskProperty[option]> extends [
+    infer P
+  ]
+    ? P
+    : true
+};
+type TaskGroupOptions = {
+  [option in keyof TaskGroupProperty]?: Parameters<
+    TaskGroupProperty[option]
+  > extends [infer P]
+    ? P
+    : true
+};
+
+type Decorator = (
+  ...args: Parameters<MethodDecorator>
+) => Exclude<ReturnType<MethodDecorator>, void>;
+
+type ObjectValues<O> = O extends { [s: string]: infer V } ? V : never;
 
 /**
  * This utility function assures compatibility with the Ember object model style
@@ -28,45 +53,17 @@ export { default as lastValue } from './last-value';
  *   someTask = function*() {}
  * }
  *
- * @param {PropertyDescriptor} desc
+ * @param desc
  * @returns {object|null}
  * @private
  */
-function extractValue(desc, allowNoInitializer = false) {
-  switch (desc.kind) {
-    case 'method': {
-      assert(
-        `'${desc.key}' has to be a method on the prototype, not 'static'.`,
-        desc.placement === 'prototype'
-      );
-      const { value } = desc.descriptor;
-      delete desc.descriptor.value;
-      desc.kind = 'field';
-
-      // This somehow happens for Ember pre 3.9 🤷🏼‍
-      if (desc.initializer) {
-        const { initializer } = desc;
-        delete desc.initializer;
-        return initializer();
-      }
-
-      return value;
-    }
-    case 'field': {
-      assert(
-        `'${desc.key}' has to be a field on the class instance, not 'static'.`,
-        desc.placement === 'own'
-      );
-      assert(
-        `'${desc.key}' has no initializer.`,
-        allowNoInitializer || typeof desc.initializer === 'function'
-      );
-      const { initializer } = desc;
-      delete desc.initializer;
-      return initializer ? initializer() : null;
-    }
-    default:
-      assert(`Unsupported kind '${desc.kind}' for '${desc.key}'.`, false);
+function extractValue(desc: DecoratorDescriptor): any {
+  if (typeof desc.initializer === 'function') {
+    return desc.initializer.call(null);
+  } else if (typeof desc.get === 'function') {
+    return desc.get.call(null);
+  } else if (desc.value) {
+    return desc.value;
   }
 }
 
@@ -74,16 +71,11 @@ function extractValue(desc, allowNoInitializer = false) {
  * Takes a `PropertyDescriptor` and turns it into an ember-concurrency
  * `TaskProperty`.
  *
- * @param {PropertyDescriptor} desc
+ * @param desc
  * @returns {TaskProperty}
  * @private
  */
-function createTaskFromDescriptor(desc) {
-  assert(
-    'ember-concurrency-decorators: Getters and setters are not supported for tasks.',
-    desc.descriptor.writable
-  );
-
+function createTaskFromDescriptor(desc: DecoratorDescriptor) {
   const value = extractValue(desc);
   assert(
     'ember-concurrency-decorators: Can only decorate a generator function as a task or an object with a generator method `perform` as an encapsulated task.',
@@ -98,40 +90,50 @@ function createTaskFromDescriptor(desc) {
  * Takes a `PropertyDescriptor` and turns it into an ember-concurrency
  * `TaskGroupProperty`.
  *
- * @param {PropertyDescriptor} desc
+ * @param desc
  * @returns {TaskGroupProperty}
  * @private
  */
-function createTaskGroupFromDescriptor(desc) {
-  assert(
-    'ember-concurrency-decorators: Getters and setters are not supported for task groups.',
-    desc.descriptor.writable
-  );
-  assert(
-    'ember-concurrency-decorators: Task groups can not accept values.',
-    !extractValue(desc, true)
-  );
+function createTaskGroupFromDescriptor(_desc: DecoratorDescriptor) {
   return createTaskGroupProperty();
 }
 
 /**
  * Applies the `options` provided using the chaining API on the given `task`.
  *
- * @param {object} options
+ * @param options
  * @param {TaskProperty|TaskGroupProperty} task
  * @private
  */
-const applyOptions = (options, task) =>
-  Object.entries(options).reduce((task, [key, value]) => {
-    assert(
-      `ember-concurrency-decorators: Option '${key}' is not a valid function`,
-      typeof task[key] === 'function'
-    );
-    if (value === true) {
-      return task[key]();
-    }
-    return task[key](value);
-  }, task);
+function applyOptions(
+  options: TaskGroupOptions,
+  task: TaskGroupProperty
+): TaskGroupProperty & Decorator;
+function applyOptions(
+  options: TaskOptions,
+  task: TaskProperty
+): TaskProperty & Decorator {
+  return Object.entries(options).reduce(
+    (
+      task,
+      [key, value]: [
+        keyof typeof options,
+        ObjectValues<Required<typeof options>>
+      ]
+    ) => {
+      assert(
+        `ember-concurrency-decorators: Option '${key}' is not a valid function`,
+        typeof task[key] === 'function'
+      );
+      if (value === true) {
+        return (task[key] as () => typeof task)();
+      }
+      return (task[key] as (o: typeof value) => typeof task)(value);
+    },
+    task
+    // The CP decorator gets executed in `createDecorator`
+  ) as TaskProperty & Decorator;
+}
 
 /**
  * Creates a decorator function that transforms the decorated property using the
@@ -142,18 +144,24 @@ const applyOptions = (options, task) =>
  * @param {object} [baseOptions={}]
  * @private
  */
-const createDecorator = (propertyCreator, baseOptions = {}) =>
-  decoratorWithParams((desc, [userOptions] = []) => {
-    const { initializer } = desc;
-    delete desc.initializer;
+const createDecorator = (
+  propertyCreator: (
+    desc: DecoratorDescriptor
+  ) => TaskProperty | TaskGroupProperty,
+  baseOptions: TaskOptions | TaskGroupOptions = {}
+) =>
+  decoratorWithParams<[typeof baseOptions?], object>(
+    (target, key, desc, [userOptions] = []) => {
+      const { initializer } = desc;
+      delete desc.initializer;
 
-    return computedDecorator(() =>
-      applyOptions(
+      return applyOptions(
         Object.assign({}, baseOptions, userOptions),
         propertyCreator({ ...desc, initializer })
-      )
-    )(desc);
-  });
+      )(target, key, desc);
+    }
+  ) as (PropertyDecorator &
+    ((options: Record<string, any>) => PropertyDecorator));
 
 /**
  * Turns the decorated generator function into a task.
@@ -280,9 +288,7 @@ export const taskGroup = createDecorator(createTaskGroupFromDescriptor);
  */
 export const restartableTaskGroup = createDecorator(
   createTaskGroupFromDescriptor,
-  {
-    restartable: true
-  }
+  { restartable: true }
 );
 
 /**
@@ -313,9 +319,7 @@ export const dropTaskGroup = createDecorator(createTaskGroupFromDescriptor, {
  */
 export const keepLatestTaskGroup = createDecorator(
   createTaskGroupFromDescriptor,
-  {
-    keepLatest: true
-  }
+  { keepLatest: true }
 );
 
 /**

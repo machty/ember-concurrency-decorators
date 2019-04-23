@@ -1,4 +1,4 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import {
@@ -9,40 +9,40 @@ import {
   enqueueTask
 } from 'ember-concurrency-decorators';
 
-module('Unit | decorators (TS)', function() {
+module('Unit | decorators', function() {
   test('Basic decorators functionality', function(assert) {
     assert.expect(5);
 
     class Obj extends EmberObject {
       @task
-      *doStuff() {
+      doStuff = function*() {
         yield;
         return 123;
-      }
+      };
 
       @restartableTask
-      *a() {
+      a = function*() {
         yield;
         return 456;
-      }
+      };
 
       @keepLatestTask
-      *b() {
+      b = function*() {
         yield;
         return 789;
-      }
+      };
 
       @dropTask
-      *c() {
+      c = function*() {
         yield;
         return 12;
-      }
+      };
 
       @enqueueTask
-      *d() {
+      d = function*() {
         yield;
         return 34;
-      }
+      };
     }
 
     let obj: Obj;
@@ -72,7 +72,7 @@ module('Unit | decorators (TS)', function() {
   });
 
   // This has actually never worked.
-  skip('Encapsulated tasks', function(assert) {
+  test('Encapsulated tasks', function(assert) {
     assert.expect(1);
 
     class Obj extends EmberObject {
