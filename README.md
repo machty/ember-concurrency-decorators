@@ -16,23 +16,21 @@ for declaring/configuring
 
 ## Installation
 
-You'll need at least `ember-cli@2.13+` and `ember-cli-babel@6+`.
+This package only works with Ember Octane, which is currently the latest Ember
+Beta. You'll need at least `ember-cli-babel@^7.7.2` and _not_ use
+`@ember-decorators/babel-transforms`, so that you get the Ember.js vanilla
+stage 1 / legacy decorators.
 Then install as any other addon:
+
+```
+ember install ember-concurrency-decorators@beta
+```
+
+For non-Octane apps, use the [latest version](https://github.com/machty/ember-concurrency-decorators/tree/v0.6.0):
 
 ```
 ember install ember-concurrency-decorators
 ```
-
-If you are _not_ using TypeScript, in order for [ember-cli-babel](https://github.com/babel/ember-cli-babel) to understand the `@decorator` syntax, you at least also need to install [`@ember-decorators/babel-transforms`](https://github.com/ember-decorators/babel-transforms). Instead of that you can also install the [`ember-decorators`](https://github.com/ember-decorators/ember-decorators) meta package:
-
-```bash
-ember install ember-decorators
-# or
-ember install @ember-decorators/babel-transforms
-```
-
-You need at least `@ember-decorators/babel-transforms@^3.1.0`. If you are stuck
-on `v2.1.2`, use [`ember-concurrency-decorators@0.3.0`](https://github.com/machty/ember-concurrency-decorators/tree/v0.3.0).
 
 ## Usage
 
@@ -58,9 +56,9 @@ import { task } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
-  *doStuff() {
+  doStuff = function*() {
     // ...
-  }
+  };
 
   // and then elsewhere
   executeTheTask() {
@@ -78,7 +76,7 @@ You can also pass further options to the task decorator:
   maxConcurrency: 3,
   restartable: true
 })
-*doStuff() {
+doStuff = function*() {
   // ...
 }
 ```
@@ -96,7 +94,7 @@ You can still pass further options to these decorators, like:
 
 ```js
 @restartableTask({ maxConcurrency: 3 })
-*doStuff() {
+doStuff = function*() {
   // ...
 }
 ```
@@ -127,7 +125,7 @@ export default class ExampleComponent extends Component {
 }
 ```
 
-Encapulated Tasks do not work with `ember-cli-typescript@1`. See the
+Encapsulated Tasks do not work with `ember-cli-typescript@1`. See the
 [TypeScript](#TypeScript) section for more details.
 
 #### `@taskGroup`
@@ -141,14 +139,14 @@ export default class ExampleComponent extends Component {
   someTaskGroup;
 
   @task({ group: 'someTaskGroup' })
-  *doStuff() {
+  doStuff = function*() {
     // ...
-  }
+  };
 
   @task({ group: 'someTaskGroup' })
-  *doOtherStuff() {
+  doOtherStuff = function*() {
     // ...
-  }
+  };
 
   // and then elsewhere
   executeTheTask() {
@@ -196,9 +194,9 @@ import { lastValue } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
-  *someTask() {
+  someTask = function*() {
     // ...
-  }
+  };
 
   @lastValue('someTask')
   someTaskValue;
@@ -207,30 +205,6 @@ export default class ExampleComponent extends Component {
   someTaskValueWithDefault = 'A default value';
 }
 ```
-
-### Support
-
-#### JavaScript
-
-While `ember-cli-babel@6` is still supported and tested, we highly recommend that you update to `ember-cli-babel@7`, if you have not already.
-
-If you are using `ember-cli-babel@6`, you'll need to use slightly different syntax:
-
-```js
-import Component from '@ember/component';
-import { task } from 'ember-concurrency-decorators';
-
-export default class ExampleComponent extends Component {
-  @task
-  doStuff = function*() {
-    // You need to use a function assignment here, instead of the method shorthand.
-  };
-}
-```
-
-#### TypeScript
-
-If you are using TypeScript, we highly recommend that you use at least [`ember-cli-typescript@^2.0.0-beta.3`](https://github.com/typed-ember/ember-cli-typescript/tree/v2.0.0-beta.3). Otherwise encapsulated tasks will not work.
 
 ## License
 
