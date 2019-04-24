@@ -19,7 +19,9 @@
     "lint:types": "tsc",
     "start": "ember serve",
     "test": "ember test",
-    "test:all": "ember try:each"
+    "test:all": "ember try:each",
+    "prepublishOnly": "ember ts:precompile",
+    "postpublish": "ember ts:clean"
   },
   "dependencies": {
     "@ember-decorators/utils": "^6.0.0",
