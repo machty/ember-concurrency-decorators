@@ -11,6 +11,7 @@ import {
 import { assert } from '@ember/debug';
 
 export { default as lastValue } from './last-value';
+export { default as asTask } from './as-task';
 
 type TaskOptions = {
   [option in keyof TaskProperty]?: Parameters<TaskProperty[option]> extends [
