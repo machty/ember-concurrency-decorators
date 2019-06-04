@@ -16,56 +16,50 @@ for declaring/configuring
 
 ## Installation
 
-This package only works with Ember Octane, which is currently the latest Ember
-Beta. You'll need at least `ember-cli-babel@^7.7.2` and _not_ use
-`@ember-decorators/babel-transforms`, so that you get the Ember.js vanilla
-stage 1 / legacy decorators.
-Then install as any other addon:
+⚠️👉 Check the [FAQ](#faq), if something isn't working or you're not sure what
+to do.
+
+### Stage 1 Decorators
+
+Requirements:
+
+- At least `ember-cli-babel@^7.7.2`
+- At least `ember-cli-typescript@^2.0.0`, if you want to use it with TypeScript
+- `@ember-decorators/babel-transforms` is _not_ installed
+- The rest of `@ember-decorators`, if present, is `^6.0.0`
+- Below Ember v3.10: [`ember-decorators-polyfill`][ember-decorators-polyfill]
+
+[ember-decorators-polyfill]: https://github.com/pzuraq/ember-decorators-polyfill
+
+Then install the latest `beta`:
 
 ```
 ember install ember-concurrency-decorators@beta
 ```
 
-For non-Octane apps, use the [latest version](https://github.com/machty/ember-concurrency-decorators/tree/v0.6.0):
+### Stage 2 Decorators
+
+If you are still using stage 2 decorators, I recommend that refactor away from
+them as soon as possible.
+
+Requirements:
+
+- at least `ember-cli-babel@^7.7.2`
+- `@ember-decorators/babel-transforms` _is_ installed
+- The rest of `@ember-decorators`, if present, is `^5.0.0` (below `6.0.0`)
+
+Then install the current [latest version][stage-2]:
+
+[stage-2]: https://github.com/machty/ember-concurrency-decorators/tree/v0.6.0
 
 ```
-ember install ember-concurrency-decorators
+ember install ember-concurrency-decorators@latest
 ```
+
+The following documentation will not be accurate. Instead refer to the
+[docs for stage 2 decorators][stage-2].
 
 ## Usage
-
-### Compatibility
-The specification for decorators in broader JavaScript has been in flux. Unfortunately, that means if you have been an early
-adopter of decorators in your ember application, you may need to consult this compatibility section to see which decorator
-syntax your project can use. [(You can read an excellent discussion on decorators here.)](https://www.pzuraq.com/coming-soon-in-ember-octane-part-1-native-classes/)
-
-#### Ember Decorators 6 + Native Ember Decorators
-_These use Stage 1 decorators_
-
-- [ ] `ember-cli-babel@^7.7.2`
-- [ ] `ember-concurrency-decorators@beta` (this package)
-- [ ] Ember >= `@3.10.0` or [`ember-native-class-polyfill`](https://github.com/pzuraq/ember-native-class-polyfill)
-- [ ] **Remove** `@ember-decorators/babel-transforms`
-
-Usage:
-```js
-  @task // imported from `ember-concurrency-decorators`
-  myTask = function*() {}
-```
-
-**Note:** You can also use `ember-concurrency` tasks directly as decorators.
-```js
-import { dropTask } from 'ember-concurrency';
-...
-@dropTask(function*() {}) myTask;
-```
-
-#### Ember Decorators 5.x
-_These use Stage 2 decorators_
-- [ ] `ember-cli-babel@^7.7.2`
-- [ ] `ember-decorators@5.x`
-- [ ] `@ember-decorators/babel-transforms`
-- [ ] `ember-concurrency-decorators@0.6.0` (this package)
 
 ### Available decorators
 
@@ -238,6 +232,102 @@ export default class ExampleComponent extends Component {
   someTaskValueWithDefault = 'A default value';
 }
 ```
+
+## FAQ
+
+### Compatibility and Weird Errors
+
+The specification for decorators in broader JavaScript has been in flux.
+Unfortunately, that means if you have been an early adopter of decorators in
+your Ember application, you may need to deal with some API churn.
+
+Check the above [requirements](#installation) to see what version you need to
+install.
+
+[(You can read an excellent discussion on decorators here.)](https://www.pzuraq.com/coming-soon-in-ember-octane-part-1-native-classes/)
+
+### TypeScript Support
+
+You can use this package with `ember-cli-typescript@2`. _But_ unfortunately
+decorators cannot yet change the type signature of the decorated element. This
+is why you are getting type errors like:
+
+```ts
+import { task } from 'ember-concurrency-decorators';
+
+export default class Foo {
+  @task
+  doStuff = function*(this: Foo) {
+    // ...
+  };
+
+  executeTheTask() {
+    this.doStuff.perform();
+  }
+}
+```
+
+```
+TS2339: Property 'perform' does not exist on type '() => IterableIterator<any>'.
+```
+
+Check issue [#30][issue-typescript] for more details.
+
+[issue-typescript]: https://github.com/machty/ember-concurrency-decorators/issues/30
+
+Very soon, you will be able to use the following syntax instead with TypeScript:
+
+```ts
+import { task } from 'ember-concurrency-decorators';
+
+export default class Foo {
+  doStuff = task(function*(this: Foo) {
+    // ...
+  });
+
+  executeTheTask() {
+    this.doStuff.perform();
+  }
+}
+```
+
+This might not be using a fancy decorator, but it is 💯 type-safe! 🎉
+
+### What happened to the fancy generator method syntax?
+
+With the [pre-1.0.0][stage-2] version of ember-concurrency-decorators, you used to be able
+to use the following sleek syntax:
+
+```js
+import { task } from 'ember-concurrency-decorators';
+
+export default class Foo {
+  @task
+  *doStuff() {
+    // ...
+  }
+
+  executeTheTask() {
+    this.doStuff.perform();
+  }
+}
+```
+
+This only worked with stage 2 decorators, which are not supported any more.
+Decorating generator methods with stage 1 decorators, is currently not possible,
+because of a bug in the stage 1 Babel parser.
+
+There already is a PR that will fix this and make the above syntax available for
+stage 1 decorators. The fix is expected to be shipped with the next release of
+Babel.
+
+You can find more information about this bug in issue [#48][issue-babel-bug].
+
+[issue-babel-bug]: https://github.com/machty/ember-concurrency-decorators/issues/48
+
+Please note that if you are using TypeScript, you likely still would not want to
+use this syntax, since it would lead to (false) type errors. See
+[TypeScript Support][#typescript-support] for more details.
 
 ## License
 
