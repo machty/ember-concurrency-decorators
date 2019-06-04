@@ -241,10 +241,22 @@ The specification for decorators in broader JavaScript has been in flux.
 Unfortunately, that means if you have been an early adopter of decorators in
 your Ember application, you may need to deal with some API churn.
 
+[(You can read an excellent discussion on decorators here.)](https://www.pzuraq.com/coming-soon-in-ember-octane-part-1-native-classes/)
+
 Check the above [requirements](#installation) to see what version you need to
 install.
 
-[(You can read an excellent discussion on decorators here.)](https://www.pzuraq.com/coming-soon-in-ember-octane-part-1-native-classes/)
+If you are sure, that you fulfilled the requirements correctly, but are still
+experiencing weird errors, install
+[`ember-cli-dependency-lint`][ember-cli-dependency-lint] to ensure that you are
+not accidentally including outdated versions of `ember-decorators` as transitive
+dependencies.
+
+[ember-cli-dependency-lint]: https://github.com/salsify/ember-cli-dependency-lint
+
+If it's still not working after that, please [create an issue][new-issue].
+
+[new-issue]: https://github.com/machty/ember-concurrency-decorators/issues/new
 
 ### TypeScript Support
 
