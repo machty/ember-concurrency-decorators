@@ -152,12 +152,13 @@ const createDecorator = (
 ) =>
   decoratorWithParams<[typeof baseOptions?], object>(
     (target, key, desc, [userOptions] = []) => {
-      const { initializer } = desc;
+      const { initializer, value } = desc;
       delete desc.initializer;
+      delete desc.value;
 
       return applyOptions(
         Object.assign({}, baseOptions, userOptions),
-        propertyCreator({ ...desc, initializer })
+        propertyCreator({ ...desc, initializer, value })
       )(target, key, desc);
     }
   ) as (PropertyDecorator &
