@@ -330,12 +330,19 @@ Decorating generator methods with stage 1 decorators, is currently not possible,
 because of a bug in the stage 1 Babel parser.
 
 There already is a PR that will fix this and make the above syntax available for
-stage 1 decorators. The fix is expected to be shipped with the next release of
-Babel.
+stage 1 decorators. The fix is expected to be shipped with the next minor
+release of Babel (`v7.5.0`).
 
 You can find more information about this bug in issue [#48][issue-babel-bug].
 
 [issue-babel-bug]: https://github.com/machty/ember-concurrency-decorators/issues/48
+
+If you don't want to wait until the fix is merged and released upstream, you can
+use [`patch-package`][patch-package] or a similar technique to apply the patch
+yourself. You can find an example of that in PR [#54][pr-patch-package].
+
+[patch-package]: https://github.com/ds300/patch-package
+[pr-patch-package]: https://github.com/machty/ember-concurrency-decorators/pull/54
 
 Please note that if you are using TypeScript, you likely still would not want to
 use this syntax, since it would lead to (false) type errors. See
