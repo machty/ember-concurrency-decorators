@@ -339,7 +339,7 @@ You can find more information about this bug in issue [#48][issue-babel-bug].
 
 Please note that if you are using TypeScript, you likely still would not want to
 use this syntax, since it would lead to (false) type errors. See
-[TypeScript Support][#typescript-support] for more details.
+[TypeScript Support](#typescript-support) for more details.
 
 ### Do I _need_ this addon?
 
@@ -366,7 +366,7 @@ _However_:
 - This syntax will not continue to work with the new "static decorators"
   proposal that is set to replace the stage 1 decorators eventually.
 - This does not properly type-check with TypeScript. See
-  [TypeScript Support][#typescript-support] for more details.
+  [TypeScript Support](#typescript-support) for more details.
 - I think this looks hideous, but that is just an opinion.
 
 Eventually, all work in `ember-concurrency-decorators` will likely flow back
