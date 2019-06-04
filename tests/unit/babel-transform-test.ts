@@ -1,14 +1,13 @@
 import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
-import { asTask, task } from 'ember-concurrency-decorators';
+import { restartableTask } from 'ember-concurrency-decorators';
 
-module('Unit | asTask', function() {
+module('Unit | Babel Transform', function() {
   test('it can be used with decorators and TypeScript is happy', async function(assert) {
     class Obj extends EmberObject {
       foo = 1337;
 
-      @task
-      doStuff = asTask(function*(this: Obj, someArg: boolean) {
+      doStuff = restartableTask(function*(this: Obj, someArg: boolean) {
         yield Promise.resolve(someArg);
         return this.foo;
       });

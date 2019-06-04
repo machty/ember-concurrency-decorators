@@ -1,38 +1,25 @@
 import {
   task as createTaskProperty,
   taskGroup as createTaskGroupProperty,
+  Task,
   TaskProperty,
-  TaskGroupProperty
-} from 'ember-concurrency';
+  TaskGroupProperty,
+  TaskGroupOptions,
+  TaskOptions
+} from './ember-concurrency';
 import {
   decoratorWithParams,
   DecoratorDescriptor
 } from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 
+import { GeneratorFn, Decorator, ObjectValues } from './types';
+
 export { default as lastValue } from './last-value';
-export { default as asTask } from './as-task';
 
-type TaskOptions = {
-  [option in keyof TaskProperty]?: Parameters<TaskProperty[option]> extends [
-    infer P
-  ]
-    ? P
-    : true
-};
-type TaskGroupOptions = {
-  [option in keyof TaskGroupProperty]?: Parameters<
-    TaskGroupProperty[option]
-  > extends [infer P]
-    ? P
-    : true
-};
-
-type Decorator = (
-  ...args: Parameters<MethodDecorator>
-) => Exclude<ReturnType<MethodDecorator>, void>;
-
-type ObjectValues<O> = O extends { [s: string]: infer V } ? V : never;
+type generatorToTask = <Args extends any[], R>(
+  task: GeneratorFn<Args, R>
+) => Task<Args, Exclude<R, Promise<any>>>;
 
 /**
  * This utility function assures compatibility with the Ember object model style
@@ -162,8 +149,9 @@ const createDecorator = (
         propertyCreator({ ...desc, initializer, value })
       )(target, key, desc);
     }
-  ) as (PropertyDecorator &
-    ((options: Record<string, any>) => PropertyDecorator));
+  ) as generatorToTask &
+    PropertyDecorator &
+    ((options: Record<string, any>) => PropertyDecorator);
 
 /**
  * Turns the decorated generator function into a task.
