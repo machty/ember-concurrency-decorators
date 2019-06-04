@@ -17,8 +17,11 @@ module('Unit | Babel Transform', function() {
     }
 
     const obj = Obj.create();
-    await obj.doStuff.perform(false);
+    await obj.get('doStuff').perform(false);
 
-    assert.strictEqual(obj.doStuff.lastSuccessful!.value, obj.foo);
+    assert.strictEqual(
+      obj.get('doStuff').get('lastSuccessful')!.value,
+      obj.foo
+    );
   });
 });

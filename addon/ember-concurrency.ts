@@ -1,5 +1,27 @@
 import { task as _task, taskGroup as _taskGroup } from 'ember-concurrency';
 import RSVP from 'rsvp';
+import {
+  UnwrapComputedPropertyGetter,
+  UnwrapComputedPropertyGetters
+} from '@ember/object/-private/types';
+
+// Lifted from @types/ember__object/observable.d.ts
+interface Getter {
+  /**
+   * Retrieves the value of a property from the object.
+   */
+  get<K extends keyof this>(key: K): UnwrapComputedPropertyGetter<this[K]>;
+  /**
+   * To get the values of multiple properties at once, call `getProperties`
+   * with a list of strings or an array:
+   */
+  getProperties<K extends keyof this>(
+    list: K[]
+  ): Pick<UnwrapComputedPropertyGetters<this>, K>;
+  getProperties<K extends keyof this>(
+    ...list: K[]
+  ): Pick<UnwrapComputedPropertyGetters<this>, K>;
+}
 
 export const task = _task as (fn: () => IterableIterator<any>) => TaskProperty;
 
@@ -48,7 +70,7 @@ export enum TaskInstanceState {
   Waiting = 'waiting'
 }
 
-export interface TaskInstance<T> extends PromiseLike<T> {
+export interface TaskInstance<T> extends PromiseLike<T>, Getter {
   readonly error?: any;
   readonly hasStarted: boolean;
   readonly isCanceled: boolean;
@@ -80,7 +102,7 @@ export enum TaskState {
   Idle = 'idle'
 }
 
-export interface Task<Args extends any[], T> {
+export interface Task<Args extends any[], T> extends Getter {
   readonly isIdle: boolean;
   readonly isQueued: boolean;
   readonly isRunning: boolean;
