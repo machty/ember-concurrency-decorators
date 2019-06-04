@@ -36,6 +36,39 @@ on `v2.1.2`, use [`ember-concurrency-decorators@0.3.0`](https://github.com/macht
 
 ## Usage
 
+### Compatibility
+The specification for decorators in broader JavaScript has been in flux. Unfortunately, that means if you have been an early
+adopter of decorators in your ember application, you may need to consult this compatibility section to see which decorator
+syntax your project can use. [(You can read an excellent discussion on decorators here.)](https://www.pzuraq.com/coming-soon-in-ember-octane-part-1-native-classes/)
+
+#### Ember Decorators 6 + Native Ember Decorators
+_These use Stage 1 decorators_
+
+- [ ] `ember-cli-babel@^7.7.2`
+- [ ] `ember-concurrency-decorators@beta` (this package)
+- [ ] Ember >= `@3.10.0` or [`ember-native-class-polyfill`](https://github.com/pzuraq/ember-native-class-polyfill)
+- [ ] **Remove** `@ember-decorators/babel-transforms`
+
+Usage:
+```js
+  @task // imported from `ember-concurrency-decorators`
+  myTask = function*() {}
+```
+
+**Note:** You can also use `ember-concurrency` tasks directly as decorators.
+```js
+import { dropTask } from 'ember-concurrency';
+...
+@dropTask(function*() {}) myTask;
+```
+
+#### Ember Decorators 5.x
+_These use Stage 2 decorators_
+- [ ] `ember-cli-babel@^7.7.2`
+- [ ] `ember-decorators@5.x`
+- [ ] `@ember-decorators/babel-transforms`
+- [ ] `ember-concurrency-decorators@0.6.0` (this package)
+
 ### Available decorators
 
 - **[`@task`](#task)**: turns a generator method into a task
