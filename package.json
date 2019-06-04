@@ -20,6 +20,7 @@
     "start": "ember serve",
     "test": "ember test",
     "test:all": "ember try:each",
+    "postinstall": "patch-package",
     "prepublishOnly": "ember ts:precompile",
     "postpublish": "ember ts:clean"
   },
@@ -64,6 +65,8 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-typescript": "^0.14.0",
     "loader.js": "^4.7.0",
+    "patch-package": "^6.1.2",
+    "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.17.1",
     "typescript": "^3.4.5",
     "typescript-eslint-parser": "^22.0.0"

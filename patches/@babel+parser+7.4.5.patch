@@ -1,0 +1,13 @@
+diff --git a/node_modules/@babel/parser/lib/index.js b/node_modules/@babel/parser/lib/index.js
+index 5c5e616..767a5b5 100644
+--- a/node_modules/@babel/parser/lib/index.js
++++ b/node_modules/@babel/parser/lib/index.js
+@@ -9995,7 +9995,7 @@ class StatementParser extends ExpressionParser {
+       node.expression = this.parseMaybeDecoratorArguments(expr);
+       this.state.decoratorStack.pop();
+     } else {
+-      node.expression = this.parseMaybeAssign();
++      node.expression = this.parseExprSubscripts();
+     }
+ 
+     return this.finishNode(node, "Decorator");
