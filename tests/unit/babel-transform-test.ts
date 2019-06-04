@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import EmberObject from '@ember/object';
-import { restartableTask } from 'ember-concurrency-decorators';
+import { restartableTask, taskGroup } from 'ember-concurrency-decorators';
 
 module('Unit | Babel Transform', function() {
   test('it can be used with decorators and TypeScript is happy', async function(assert) {
@@ -11,6 +11,9 @@ module('Unit | Babel Transform', function() {
         yield Promise.resolve(someArg);
         return this.foo;
       });
+
+      // @TODO: define proper types for `TaskGroup`
+      group = taskGroup({ restartable: true });
     }
 
     const obj = Obj.create();
