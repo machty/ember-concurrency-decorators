@@ -71,7 +71,7 @@ export enum TaskInstanceState {
 }
 
 export interface TaskInstance<T> extends PromiseLike<T>, Getter {
-  readonly error?: any;
+  readonly error?: unknown;
   readonly hasStarted: boolean;
   readonly isCanceled: boolean;
   readonly isDropped: boolean;
@@ -82,8 +82,8 @@ export interface TaskInstance<T> extends PromiseLike<T>, Getter {
   readonly state: TaskInstanceState;
   readonly value?: T;
   cancel(): void;
-  catch(): RSVP.Promise<any>;
-  finally(): RSVP.Promise<any>;
+  catch(): RSVP.Promise<unknown>;
+  finally(): RSVP.Promise<unknown>;
   then<TResult1 = T, TResult2 = never>(
     onfulfilled?:
       | ((value: T) => TResult1 | RSVP.Promise<TResult1>)
