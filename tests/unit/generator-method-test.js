@@ -1,6 +1,8 @@
 import { module, test } from 'qunit';
+
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
+
 import {
   task,
   restartableTask,
@@ -13,7 +15,7 @@ module('Unit | generator method', function() {
   test('Basic decorators functionality', function(assert) {
     assert.expect(5);
 
-    class Obj extends EmberObject {
+    class TestSubject extends EmberObject {
       @task
       *doStuff() {
         yield;
@@ -45,19 +47,19 @@ module('Unit | generator method', function() {
       }
     }
 
-    let obj;
+    let subject;
     run(() => {
-      obj = Obj.create();
-      obj.get('doStuff').perform();
-      obj.get('a').perform();
-      obj.get('b').perform();
-      obj.get('c').perform();
-      obj.get('d').perform();
+      subject = TestSubject.create();
+      subject.get('doStuff').perform();
+      subject.get('a').perform();
+      subject.get('b').perform();
+      subject.get('c').perform();
+      subject.get('d').perform();
     });
-    assert.equal(obj.get('doStuff.last.value'), 123);
-    assert.equal(obj.get('a.last.value'), 456);
-    assert.equal(obj.get('b.last.value'), 789);
-    assert.equal(obj.get('c.last.value'), 12);
-    assert.equal(obj.get('d.last.value'), 34);
+    assert.equal(subject.get('doStuff.last.value'), 123);
+    assert.equal(subject.get('a.last.value'), 456);
+    assert.equal(subject.get('b.last.value'), 789);
+    assert.equal(subject.get('c.last.value'), 12);
+    assert.equal(subject.get('d.last.value'), 34);
   });
 });

@@ -1,14 +1,15 @@
 import {
+  decoratorWithParams,
+  DecoratorDescriptor
+} from '@ember-decorators/utils/decorator';
+import { assert } from '@ember/debug';
+
+import {
   task as createTaskProperty,
   taskGroup as createTaskGroupProperty,
   TaskProperty,
   TaskGroupProperty
 } from 'ember-concurrency';
-import {
-  decoratorWithParams,
-  DecoratorDescriptor
-} from '@ember-decorators/utils/decorator';
-import { assert } from '@ember/debug';
 
 export { default as lastValue } from './last-value';
 
@@ -17,14 +18,14 @@ type TaskOptions = {
     infer P
   ]
     ? P
-    : true
+    : true;
 };
 type TaskGroupOptions = {
   [option in keyof TaskGroupProperty]?: Parameters<
     TaskGroupProperty[option]
   > extends [infer P]
     ? P
-    : true
+    : true;
 };
 
 type Decorator = (
@@ -60,9 +61,11 @@ type ObjectValues<O> = O extends { [s: string]: infer V } ? V : never;
 function extractValue(desc: DecoratorDescriptor): any {
   if (typeof desc.initializer === 'function') {
     return desc.initializer.call(null);
-  } else if (typeof desc.get === 'function') {
+  }
+  if (typeof desc.get === 'function') {
     return desc.get.call(null);
-  } else if (desc.value) {
+  }
+  if (desc.value) {
     return desc.value;
   }
 }
@@ -115,7 +118,7 @@ function applyOptions(
 ): TaskProperty & Decorator {
   return Object.entries(options).reduce(
     (
-      task,
+      taskProperty,
       [key, value]: [
         keyof typeof options,
         ObjectValues<Required<typeof options>>
@@ -123,12 +126,14 @@ function applyOptions(
     ) => {
       assert(
         `ember-concurrency-decorators: Option '${key}' is not a valid function`,
-        typeof task[key] === 'function'
+        typeof taskProperty[key] === 'function'
       );
       if (value === true) {
-        return (task[key] as () => typeof task)();
+        return (taskProperty[key] as () => typeof taskProperty)();
       }
-      return (task[key] as (o: typeof value) => typeof task)(value);
+      return (taskProperty[key] as (o: typeof value) => typeof taskProperty)(
+        value
+      );
     },
     task
     // The CP decorator gets executed in `createDecorator`

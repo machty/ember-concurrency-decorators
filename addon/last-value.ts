@@ -1,6 +1,6 @@
-import { get, computed } from '@ember/object';
 import { decoratorWithRequiredParams } from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
+import { get, computed } from '@ember/object';
 
 /**
  * This decorator allows you to alias a property to the result of a task. You can also provide a default value to use before the task has completed.
@@ -27,6 +27,7 @@ import { assert } from '@ember/debug';
  * @function
  * @param {string} taskName the name of the task to read a value from
  */
+// eslint-disable-next-line func-names
 export default decoratorWithRequiredParams(function lastValue<
   Target extends object
 >(

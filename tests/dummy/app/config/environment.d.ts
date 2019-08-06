@@ -1,5 +1,3 @@
-export default config;
-
 /**
  * Type declarations for
  *    import config from './config/environment'
@@ -14,3 +12,5 @@ declare const config: {
   locationType: string;
   rootURL: string;
 };
+
+export default config;

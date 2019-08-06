@@ -18,6 +18,8 @@ export interface TaskProperty extends CommonTaskProperty {
   on: (eventName: string) => TaskProperty;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface TaskGroupProperty extends CommonTaskProperty {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface TaskInstance {}

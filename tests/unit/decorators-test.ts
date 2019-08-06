@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { module, test } from 'qunit';
+
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
+
 import {
   task,
   restartableTask,
@@ -13,7 +17,7 @@ module('Unit | decorators', function() {
   test('Basic decorators functionality', function(assert) {
     assert.expect(5);
 
-    class Obj extends EmberObject {
+    class TestSubject extends EmberObject {
       @task
       doStuff = function*() {
         yield;
@@ -45,37 +49,37 @@ module('Unit | decorators', function() {
       };
     }
 
-    let obj: Obj;
+    let subject;
     run(() => {
-      obj = Obj.create();
+      subject = TestSubject.create();
       // @ts-ignore
-      obj.get('doStuff').perform();
+      subject.get('doStuff').perform();
       // @ts-ignore
-      obj.get('a').perform();
+      subject.get('a').perform();
       // @ts-ignore
-      obj.get('b').perform();
+      subject.get('b').perform();
       // @ts-ignore
-      obj.get('c').perform();
+      subject.get('c').perform();
       // @ts-ignore
-      obj.get('d').perform();
+      subject.get('d').perform();
     });
     // @ts-ignore
-    assert.equal(obj!.get('doStuff.last.value'), 123);
+    assert.equal(subject!.get('doStuff.last.value'), 123);
     // @ts-ignore
-    assert.equal(obj!.get('a.last.value'), 456);
+    assert.equal(subject!.get('a.last.value'), 456);
     // @ts-ignore
-    assert.equal(obj!.get('b.last.value'), 789);
+    assert.equal(subject!.get('b.last.value'), 789);
     // @ts-ignore
-    assert.equal(obj!.get('c.last.value'), 12);
+    assert.equal(subject!.get('c.last.value'), 12);
     // @ts-ignore
-    assert.equal(obj!.get('d.last.value'), 34);
+    assert.equal(subject!.get('d.last.value'), 34);
   });
 
   // This has actually never worked.
   test('Encapsulated tasks', function(assert) {
     assert.expect(1);
 
-    class Obj extends EmberObject {
+    class TestSubject extends EmberObject {
       @task
       encapsulated = {
         privateState: 56,
@@ -86,12 +90,12 @@ module('Unit | decorators', function() {
       };
     }
 
-    let obj: Obj;
+    let subject;
     run(() => {
-      obj = Obj.create();
-      obj.get('encapsulated').perform();
+      subject = TestSubject.create();
+      subject.get('encapsulated').perform();
     });
     // @ts-ignore
-    assert.equal(obj!.get('encapsulated.last.value'), 56);
+    assert.equal(subject!.get('encapsulated.last.value'), 56);
   });
 });
