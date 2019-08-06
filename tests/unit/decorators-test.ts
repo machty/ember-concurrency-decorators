@@ -49,7 +49,7 @@ module('Unit | decorators', function() {
       };
     }
 
-    let subject;
+    let subject!: TestSubject;
     run(() => {
       subject = TestSubject.create();
       // @ts-ignore
@@ -64,15 +64,15 @@ module('Unit | decorators', function() {
       subject.get('d').perform();
     });
     // @ts-ignore
-    assert.equal(subject!.get('doStuff.last.value'), 123);
+    assert.equal(subject.get('doStuff.last.value'), 123);
     // @ts-ignore
-    assert.equal(subject!.get('a.last.value'), 456);
+    assert.equal(subject.get('a.last.value'), 456);
     // @ts-ignore
-    assert.equal(subject!.get('b.last.value'), 789);
+    assert.equal(subject.get('b.last.value'), 789);
     // @ts-ignore
-    assert.equal(subject!.get('c.last.value'), 12);
+    assert.equal(subject.get('c.last.value'), 12);
     // @ts-ignore
-    assert.equal(subject!.get('d.last.value'), 34);
+    assert.equal(subject.get('d.last.value'), 34);
   });
 
   // This has actually never worked.
@@ -90,12 +90,12 @@ module('Unit | decorators', function() {
       };
     }
 
-    let subject;
+    let subject!: TestSubject;
     run(() => {
       subject = TestSubject.create();
       subject.get('encapsulated').perform();
     });
     // @ts-ignore
-    assert.equal(subject!.get('encapsulated.last.value'), 56);
+    assert.equal(subject.get('encapsulated.last.value'), 56);
   });
 });
