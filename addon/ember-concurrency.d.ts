@@ -25,7 +25,8 @@ declare module 'ember-concurrency' {
     ): Pick<UnwrapComputedPropertyGetters<this>, K>;
   }
 
-  export type GeneratorFn<Args extends any[] = any[], R = any> = (
+  export type GeneratorFn<T, Args extends any[] = any[], R = any> = (
+    this: T,
     ...args: Args
   ) => IterableIterator<R>;
 
@@ -50,10 +51,10 @@ declare module 'ember-concurrency' {
   export function waitForQueue(queueName: string): Promise<void>;
 
   export function task<Args extends any[], R>(
-    taskFn: GeneratorFn<Args, R>
+    taskFn: GeneratorFn<unknown, Args, R>
   ): Task<Args, Exclude<R, Promise<any>>>;
   export function task<Args extends any[], R>(encapsulatedTask: {
-    perform: GeneratorFn<Args, R>;
+    perform: GeneratorFn<unknown, Args, R>;
   }): Task<Args, Exclude<R, Promise<any>>>;
 
   export function taskGroup(): TaskGroupProperty;

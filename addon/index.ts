@@ -198,11 +198,16 @@ const createDecorator = (
 const taskDecorator = createDecorator(createTaskFromDescriptor);
 
 export function task<Args extends any[], R>(
-  taskFn: GeneratorFn<Args, R>
+  taskFn: GeneratorFn<unknown, Args, R>
 ): Task<Args, Exclude<R, Promise<any>>>;
-export function task<Args extends any[], R>(encapsulatedTask: {
-  perform: GeneratorFn<Args, R>;
-}): Task<Args, Exclude<R, Promise<any>>>;
+export function task<
+  Args extends any[],
+  R,
+  E extends {
+    // @TODO: this does not work
+    perform: GeneratorFn<E, Args, R>;
+  }
+>(encapsulatedTask: E): Task<Args, Exclude<R, Promise<any>>>;
 export function task(options: TaskOptions): PropertyDecorator;
 export function task(
   target: Record<string, any>,
@@ -210,8 +215,8 @@ export function task(
 ): void;
 export function task<Args extends any[], R>(
   ...args:
-    | [GeneratorFn<Args, R>]
-    | [{ perform: GeneratorFn<Args, R> }]
+    | [GeneratorFn<unknown, Args, R>]
+    | [{ perform: GeneratorFn<unknown, Args, R> }]
     | [TaskOptions]
     | [Record<string, any>, string | symbol]
 ): Task<Args, Exclude<R, Promise<any>>> | PropertyDecorator | void {
