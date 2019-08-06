@@ -14,9 +14,9 @@ module('Unit | last-value', function(hooks) {
   test('without a default value', function(assert) {
     class ObjectWithTask extends EmberObject {
       @task
-      task = function*() {
+      task = task(function*() {
         return yield 'foo';
-      };
+      });
 
       @lastValue('task')
       value?: 'foo';
@@ -29,7 +29,6 @@ module('Unit | last-value', function(hooks) {
       'it returns nothing if the task has not been performed'
     );
 
-    // @ts-ignore
     instance.get('task').perform();
     nextLoop();
 
@@ -43,9 +42,9 @@ module('Unit | last-value', function(hooks) {
   test('with a default value', function(assert) {
     class ObjectWithTaskDefaultValue extends EmberObject {
       @task
-      task = function*() {
+      task = task(function*() {
         return yield 'foo';
-      };
+      });
 
       @lastValue('task')
       value = 'default value';
@@ -59,7 +58,6 @@ module('Unit | last-value', function(hooks) {
       'it returns the default value if the task has not been performed'
     );
 
-    // @ts-ignore
     instance.get('task').perform();
     nextLoop();
 

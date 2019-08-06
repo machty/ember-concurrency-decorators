@@ -19,60 +19,80 @@ module('Unit | decorators', function() {
 
     class TestSubject extends EmberObject {
       @task
-      doStuff = function*() {
+      doStuff = task(function*() {
         yield;
         return 123;
-      };
+      });
 
       @restartableTask
-      a = function*() {
+      a = task(function*() {
         yield;
         return 456;
-      };
+      });
 
       @keepLatestTask
-      b = function*() {
+      b = task(function*() {
         yield;
         return 789;
-      };
+      });
 
       @dropTask
-      c = function*() {
+      c = task(function*() {
         yield;
         return 12;
-      };
+      });
 
       @enqueueTask
-      d = function*() {
+      d = task(function*() {
         yield;
         return 34;
-      };
+      });
     }
 
     let subject!: TestSubject;
     run(() => {
       subject = TestSubject.create();
-      // @ts-ignore
       subject.get('doStuff').perform();
-      // @ts-ignore
       subject.get('a').perform();
-      // @ts-ignore
       subject.get('b').perform();
-      // @ts-ignore
       subject.get('c').perform();
-      // @ts-ignore
       subject.get('d').perform();
     });
-    // @ts-ignore
-    assert.equal(subject.get('doStuff.last.value'), 123);
-    // @ts-ignore
-    assert.equal(subject.get('a.last.value'), 456);
-    // @ts-ignore
-    assert.equal(subject.get('b.last.value'), 789);
-    // @ts-ignore
-    assert.equal(subject.get('c.last.value'), 12);
-    // @ts-ignore
-    assert.equal(subject.get('d.last.value'), 34);
+    assert.equal(
+      subject
+        .get('doStuff')
+        .get('last')!
+        .get('value'),
+      123
+    );
+    assert.equal(
+      subject
+        .get('a')
+        .get('last')!
+        .get('value'),
+      456
+    );
+    assert.equal(
+      subject
+        .get('b')
+        .get('last')!
+        .get('value'),
+      789
+    );
+    assert.equal(
+      subject
+        .get('c')
+        .get('last')!
+        .get('value'),
+      12
+    );
+    assert.equal(
+      subject
+        .get('d')
+        .get('last')!
+        .get('value'),
+      34
+    );
   });
 
   // This has actually never worked.
@@ -81,13 +101,13 @@ module('Unit | decorators', function() {
 
     class TestSubject extends EmberObject {
       @task
-      encapsulated = {
+      encapsulated = task({
         privateState: 56,
         *perform() {
           yield;
           return this.privateState;
         }
-      };
+      });
     }
 
     let subject!: TestSubject;
@@ -95,7 +115,12 @@ module('Unit | decorators', function() {
       subject = TestSubject.create();
       subject.get('encapsulated').perform();
     });
-    // @ts-ignore
-    assert.equal(subject.get('encapsulated.last.value'), 56);
+    assert.equal(
+      subject
+        .get('encapsulated')
+        .get('last')
+        .get('value'),
+      56
+    );
   });
 });

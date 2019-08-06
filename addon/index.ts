@@ -8,7 +8,9 @@ import {
   task as createTaskProperty,
   taskGroup as createTaskGroupProperty,
   TaskProperty,
-  TaskGroupProperty
+  TaskGroupProperty,
+  Task,
+  GeneratorFn
 } from 'ember-concurrency';
 
 export { default as lastValue } from './last-value';
@@ -86,7 +88,7 @@ function createTaskFromDescriptor(desc: DecoratorDescriptor) {
       (typeof value === 'object' && typeof value.perform === 'function')
   );
 
-  return createTaskProperty(value);
+  return (createTaskProperty(value) as unknown) as TaskProperty;
 }
 
 /**
@@ -110,14 +112,15 @@ function createTaskGroupFromDescriptor(_desc: DecoratorDescriptor) {
  */
 function applyOptions(
   options: TaskGroupOptions,
-  task: TaskGroupProperty
+  taskProperty: TaskGroupProperty
 ): TaskGroupProperty & Decorator;
 function applyOptions(
   options: TaskOptions,
-  task: TaskProperty
+  taskProperty: TaskProperty
 ): TaskProperty & Decorator {
   return Object.entries(options).reduce(
     (
+      // eslint-disable-next-line no-shadow
       taskProperty,
       [key, value]: [
         keyof typeof options,
@@ -135,7 +138,7 @@ function applyOptions(
         value
       );
     },
-    task
+    taskProperty
     // The CP decorator gets executed in `createDecorator`
   ) as TaskProperty & Decorator;
 }
@@ -192,7 +195,38 @@ const createDecorator = (
  * @param {object?} [options={}]
  * @return {TaskProperty}
  */
-export const task = createDecorator(createTaskFromDescriptor);
+const taskDecorator = createDecorator(createTaskFromDescriptor);
+
+export function task<Args extends any[], R>(
+  taskFn: GeneratorFn<Args, R>
+): Task<Args, Exclude<R, Promise<any>>>;
+export function task<Args extends any[], R>(encapsulatedTask: {
+  perform: GeneratorFn<Args, R>;
+}): Task<Args, Exclude<R, Promise<any>>>;
+export function task(options: TaskOptions): PropertyDecorator;
+export function task(
+  target: Record<string, any>,
+  propertyKey: string | symbol
+): void;
+export function task<Args extends any[], R>(
+  ...args:
+    | [GeneratorFn<Args, R>]
+    | [{ perform: GeneratorFn<Args, R> }]
+    | [TaskOptions]
+    | [Record<string, any>, string | symbol]
+): Task<Args, Exclude<R, Promise<any>>> | PropertyDecorator | void {
+  const [firstParam] = args;
+  if (
+    typeof firstParam === 'function' ||
+    (typeof firstParam === 'object' &&
+      // @ts-ignore
+      typeof firstParam.perform === 'function')
+  )
+    // @ts-ignore
+    return firstParam;
+  // @ts-ignore
+  return taskDecorator(...args);
+}
 
 /**
  * Turns the decorated generator function into a task and applies the
