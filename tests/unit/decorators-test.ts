@@ -24,6 +24,12 @@ module('Unit | decorators', function() {
         return 123;
       });
 
+      @task
+      withParameters = task(function*(foo: string, bar: boolean) {
+        yield;
+        return { foo, bar };
+      });
+
       @restartableTask
       a = task(function*() {
         yield;
@@ -53,6 +59,7 @@ module('Unit | decorators', function() {
     run(() => {
       subject = TestSubject.create();
       subject.get('doStuff').perform();
+      subject.get('withParameters').perform('abc', true);
       subject.get('a').perform();
       subject.get('b').perform();
       subject.get('c').perform();
@@ -64,6 +71,13 @@ module('Unit | decorators', function() {
         .get('last')!
         .get('value'),
       123
+    );
+    assert.deepEqual(
+      subject
+        .get('withParameters')
+        .get('last')!
+        .get('value'),
+      { foo: 'abc', bar: true }
     );
     assert.equal(
       subject
