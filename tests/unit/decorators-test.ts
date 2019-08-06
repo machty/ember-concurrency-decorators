@@ -18,10 +18,12 @@ module('Unit | decorators', function() {
     assert.expect(5);
 
     class TestSubject extends EmberObject {
+      readonly someProperty = 123;
+
       @task
-      doStuff = task(function*() {
+      doStuff = task(function*(this: TestSubject) {
         yield;
-        return 123;
+        return this.someProperty;
       });
 
       @task
@@ -117,9 +119,9 @@ module('Unit | decorators', function() {
       @task
       encapsulated = task({
         privateState: 56,
-        *perform() {
+        *perform(_foo: string) {
           yield;
-          return this.privateState;
+          return this.privateState; // @TODO: broken
         }
       });
     }
@@ -127,12 +129,12 @@ module('Unit | decorators', function() {
     let subject!: TestSubject;
     run(() => {
       subject = TestSubject.create();
-      subject.get('encapsulated').perform();
+      subject.get('encapsulated').perform('abc');
     });
     assert.equal(
       subject
         .get('encapsulated')
-        .get('last')
+        .get('last')!
         .get('value'),
       56
     );
