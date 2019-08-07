@@ -15,7 +15,7 @@ import {
 
 module('Unit | decorators', function() {
   test('Basic decorators functionality', function(assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     class TestSubject extends EmberObject {
       readonly someProperty = 123;
@@ -121,6 +121,7 @@ module('Unit | decorators', function() {
         privateState: 56,
         *perform(_foo: string) {
           yield;
+          // @ts-ignore
           return this.privateState; // @TODO: broken
         }
       });
