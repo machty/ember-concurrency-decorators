@@ -31,16 +31,16 @@ Requirements:
 
 [ember-decorators-polyfill]: https://github.com/pzuraq/ember-decorators-polyfill
 
-Then install the latest `beta`:
+Then install the `latest` release:
 
 ```
-ember install ember-concurrency-decorators@beta
+ember install ember-concurrency-decorators
 ```
 
 ### Stage 2 Decorators
 
-If you are still using stage 2 decorators, I recommend that refactor away from
-them as soon as possible.
+If you are still using stage 2 decorators, I recommend that you refactor away
+from them as soon as possible.
 
 Requirements:
 
@@ -48,12 +48,12 @@ Requirements:
 - `@ember-decorators/babel-transforms` _is_ installed
 - The rest of `@ember-decorators`, if present, is `^5.0.0` (below `6.0.0`)
 
-Then install the current [latest version][stage-2]:
+Then install the [`legacy`][stage-2] version:
 
 [stage-2]: https://github.com/machty/ember-concurrency-decorators/tree/v0.6.0
 
 ```
-ember install ember-concurrency-decorators@latest
+ember install ember-concurrency-decorators@legacy
 ```
 
 The following documentation will not be accurate. Instead refer to the
