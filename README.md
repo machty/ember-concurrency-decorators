@@ -84,9 +84,9 @@ import { task } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
-  doStuff = function*() {
+  *doStuff() {
     // ...
-  };
+  }
 
   // and then elsewhere
   executeTheTask() {
@@ -104,7 +104,7 @@ You can also pass further options to the task decorator:
   maxConcurrency: 3,
   restartable: true
 })
-doStuff = function*() {
+*doStuff() {
   // ...
 }
 ```
@@ -122,7 +122,7 @@ You can still pass further options to these decorators, like:
 
 ```js
 @restartableTask({ maxConcurrency: 3 })
-doStuff = function*() {
+*doStuff() {
   // ...
 }
 ```
@@ -167,14 +167,14 @@ export default class ExampleComponent extends Component {
   someTaskGroup;
 
   @task({ group: 'someTaskGroup' })
-  doStuff = function*() {
+  *doStuff() {
     // ...
-  };
+  }
 
   @task({ group: 'someTaskGroup' })
-  doOtherStuff = function*() {
+  *doOtherStuff() {
     // ...
-  };
+  }
 
   // and then elsewhere
   executeTheTask() {
@@ -222,9 +222,9 @@ import { lastValue } from 'ember-concurrency-decorators';
 
 export default class ExampleComponent extends Component {
   @task
-  someTask = function*() {
+  *someTask() {
     // ...
-  };
+  }
 
   @lastValue('someTask')
   someTaskValue;
@@ -270,9 +270,9 @@ import { task } from 'ember-concurrency-decorators';
 
 export default class Foo {
   @task
-  doStuff = function*(this: Foo) {
+  *doStuff(this: Foo) {
     // ...
-  };
+  }
 
   executeTheTask() {
     this.doStuff.perform();
