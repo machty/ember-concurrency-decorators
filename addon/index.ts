@@ -162,7 +162,7 @@ const createDecorator = (
       delete desc.value;
 
       return applyOptions(
-        Object.assign({}, baseOptions, userOptions),
+        { ...baseOptions, ...userOptions },
         propertyCreator({ ...desc, initializer, value })
       )(target, key, desc);
     }

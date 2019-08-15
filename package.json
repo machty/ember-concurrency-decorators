@@ -24,14 +24,14 @@
     "postpublish": "ember ts:clean"
   },
   "dependencies": {
-    "@ember-decorators/utils": "^6.0.0",
-    "ember-cli-babel": "^7.8.0",
+    "@ember-decorators/utils": "^6.1.0",
+    "ember-cli-babel": "^7.9.0",
     "ember-cli-typescript": "^2.0.2"
   },
   "devDependencies": {
-    "@clark/eslint-config-ember": "^1.8.0",
-    "@clark/eslint-config-ember-typescript": "^1.8.0",
-    "@clark/eslint-config-node": "^1.8.0",
+    "@clark/eslint-config-ember": "^1.10.2",
+    "@clark/eslint-config-ember-typescript": "^1.10.2",
+    "@clark/eslint-config-node": "^1.10.0",
     "@ember/optional-features": "^0.7.0",
     "@types/ember": "^3.1.0",
     "@types/ember-qunit": "^3.4.6",
@@ -55,10 +55,10 @@
     "ember-load-initializers": "^2.0.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^4.5.1",
-    "ember-resolver": "^5.2.0",
+    "ember-resolver": "^5.2.1",
     "ember-source": "^3.12.0",
     "ember-source-channel-url": "^2.0.1",
-    "ember-template-lint": "^1.5.1",
+    "ember-template-lint": "^1.5.2",
     "ember-try": "^1.2.1",
     "eslint": "^6.1.0",
     "loader.js": "^4.7.0",

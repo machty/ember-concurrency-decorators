@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { module, test } from 'qunit';
 
 import EmberObject from '@ember/object';
