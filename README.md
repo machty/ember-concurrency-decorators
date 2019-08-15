@@ -294,6 +294,7 @@ Very soon, you will be able to use the following syntax instead with TypeScript:
 import { task } from 'ember-concurrency-decorators';
 
 export default class Foo {
+  @task
   doStuff = task(function*(this: Foo) {
     // ...
   });
@@ -304,7 +305,11 @@ export default class Foo {
 }
 ```
 
-This might not be using a fancy decorator, but it is 💯 type-safe! 🎉
+This might not be using a fancy generator method, but it is 💯 type-safe! 🎉
+
+Check the [PR #56][pr-typescript] for progress.
+
+[pr-typescript]: https://github.com/machty/ember-concurrency-decorators/pull/56
 
 ### Do I _need_ this addon?
 
