@@ -116,7 +116,7 @@ function applyOptions(
   options: TaskOptions,
   task: TaskProperty
 ): TaskProperty & Decorator {
-  return Object.entries(options).reduce(
+  return entries(options).reduce(
     (
       taskProperty,
       [key, value]: [
@@ -342,3 +342,30 @@ export const keepLatestTaskGroup = createDecorator(
 export const enqueueTaskGroup = createDecorator(createTaskGroupFromDescriptor, {
   enqueue: true
 });
+
+// @private
+function getEntries(object: object) {
+  const keys = Object.keys(object);
+  let i = keys.length;
+  const resultingArray = new Array(i); // preallocate the Array
+
+  while (i--) {
+    const key = keys[i];
+    const newEntry = [key, object[key]];
+
+    resultingArray[i] = newEntry;
+  }
+
+  return resultingArray;
+}
+
+/**
+ * This function calls `Object.entries` if available, or falls back to a naive
+ * implementation (courtesy of MDN) in the event it's not implemented
+ * (e.g. IE11).
+ *
+ * @private
+ */
+function entries(object: object) {
+  return Object.entries ? Object.entries(object) : getEntries(object);
+}
