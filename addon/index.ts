@@ -344,19 +344,8 @@ export const enqueueTaskGroup = createDecorator(createTaskGroupFromDescriptor, {
 });
 
 // @private
-function getEntries(object: object) {
-  const keys = Object.keys(object);
-  let i = keys.length;
-  const resultingArray = new Array(i); // preallocate the Array
-
-  while (i--) {
-    const key = keys[i];
-    const newEntry = [key, object[key]];
-
-    resultingArray[i] = newEntry;
-  }
-
-  return resultingArray;
+const getEntries: typeof Object.entries = <T>(object: { [key: string]: T; }) => {
+  return Object.keys(object).map(key => [key, object[key]] as [string, T]);
 }
 
 /**
