@@ -29,7 +29,7 @@
     "@ember-decorators/utils": "^6.1.0",
     "ember-cli-babel": "^7.19.0",
     "ember-cli-htmlbars": "^4.3.1",
-    "ember-cli-typescript": "^2.0.2"
+    "ember-cli-typescript": "^3.1.4"
   },
   "devDependencies": {
     "@clark/eslint-config-ember": "^1.24.4",
