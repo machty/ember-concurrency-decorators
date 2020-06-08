@@ -54,6 +54,8 @@ export default decoratorWithRequiredParams(function lastValue<
     if (initializer) {
       return initializer.call(this);
     }
+
+    return undefined;
   });
 
   // @ts-ignore
