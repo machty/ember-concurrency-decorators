@@ -2824,7 +2824,7 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
-babel-core@^6.24.1, babel-core@^6.26.0, babel-core@^6.26.3:
+babel-core@^6.26.0, babel-core@^6.26.3:
   version "6.26.3"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
   integrity sha512-6jyFLuDmeidKmUEb3NM+/yawG0M2bDZ9Z1qbZP59cyHLz8kYGKYwpJP0UwUKKUiTRNvxfLesJnTedqczP7cTDA==
@@ -5457,7 +5457,7 @@ ember-cli-babel-plugin-helpers@^1.0.0, ember-cli-babel-plugin-helpers@^1.1.0:
   resolved "https://registry.yarnpkg.com/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.0.tgz#de3baedd093163b6c2461f95964888c1676325ac"
   integrity sha512-Zr4my8Xn+CzO0gIuFNXji0eTRml5AxZUTDQz/wsNJ5AJAtyFWCY4QtKdoELNNbiCVGt1lq5yLiwTm4scGKu6xA==
 
-ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.16.0, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1, ember-cli-babel@^6.8.2:
+ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.16.0, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-6.18.0.tgz#3f6435fd275172edeff2b634ee7b29ce74318957"
   integrity sha512-7ceC8joNYxY2wES16iIBlbPSxwKDBhYwC8drU3ZEvuPDMwVv1KzxCNu1fvxyFEBWhwaRNTUxSCsEVoTd9nosGA==
@@ -5885,15 +5885,14 @@ ember-compatibility-helpers@^1.2.0:
     ember-cli-version-checker "^2.1.1"
     semver "^5.4.1"
 
-ember-concurrency@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-1.0.0.tgz#3b650672fdd5dc1d45007626119135829076c2b6"
-  integrity sha512-76aKC0lo2LAPoQYz7vMRlpolWTIQerszr8PPf3JMM5cTOzPwXUtzDcjfso3JAEDdhyUF9fkv2V1DmHagFbC2YQ==
+ember-concurrency@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-1.2.0.tgz#f8d09ff035ba7652f01de198b9e16424ef2b8522"
+  integrity sha512-XEKleKlcJQOTbMHEbEtIYF/VXSJDVB8H3pRFY5qmGqGujvpLaJY0GCQ6xtnTDdmSDkBO77FJ9o36GL7iwyqn6g==
   dependencies:
-    babel-core "^6.24.1"
-    ember-cli-babel "^6.8.2"
+    ember-cli-babel "^7.7.3"
     ember-compatibility-helpers "^1.2.0"
-    ember-maybe-import-regenerator "^0.1.5"
+    ember-maybe-import-regenerator "^0.1.6"
 
 ember-disable-prototype-extensions@^1.1.3:
   version "1.1.3"
@@ -5913,7 +5912,7 @@ ember-load-initializers@^2.1.1:
     ember-cli-babel "^7.11.0"
     ember-cli-typescript "^2.0.2"
 
-ember-maybe-import-regenerator@^0.1.5, ember-maybe-import-regenerator@^0.1.6:
+ember-maybe-import-regenerator@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/ember-maybe-import-regenerator/-/ember-maybe-import-regenerator-0.1.6.tgz#35d41828afa6d6a59bc0da3ce47f34c573d776ca"
   integrity sha1-NdQYKK+m1qWbwNo85H80xXPXdso=
