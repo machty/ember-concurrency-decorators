@@ -1,4 +1,7 @@
-import { decoratorWithRequiredParams, DecoratorDescriptor } from '@ember-decorators/utils/decorator';
+import {
+  decoratorWithRequiredParams,
+  DecoratorDescriptor
+} from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 import { get, computed } from '@ember/object';
 

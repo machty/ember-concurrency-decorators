@@ -121,7 +121,7 @@ module.exports = async function() {
         name: 'typescript-3.6',
         npm: {
           devDependencies: {
-            'typescript': '~3.6.0'
+            typescript: '~3.6.0'
           }
         },
         command: 'tsc'
@@ -130,7 +130,7 @@ module.exports = async function() {
         name: 'typescript-3.8',
         npm: {
           devDependencies: {
-            'typescript': '~3.8.0'
+            typescript: '~3.8.0'
           }
         },
         command: 'tsc'
@@ -139,7 +139,7 @@ module.exports = async function() {
         name: 'typescript-3.9',
         npm: {
           devDependencies: {
-            'typescript': '~3.9.0'
+            typescript: '~3.9.0'
           }
         },
         command: 'tsc'
