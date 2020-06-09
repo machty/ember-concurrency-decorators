@@ -26,8 +26,7 @@
       "ember-concurrency-decorators": ["addon"],
       "ember-concurrency-decorators/*": ["addon/*"],
       "ember-concurrency-decorators/test-support": ["addon-test-support"],
-      "ember-concurrency-decorators/test-support/*": ["addon-test-support/*"],
-      "*": ["types/*"]
+      "ember-concurrency-decorators/test-support/*": ["addon-test-support/*"]
     }
   },
   "include": [
