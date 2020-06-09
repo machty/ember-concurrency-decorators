@@ -1,4 +1,7 @@
-import { decoratorWithRequiredParams } from '@ember-decorators/utils/decorator';
+import {
+  decoratorWithRequiredParams,
+  DecoratorDescriptor
+} from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 import { get, computed } from '@ember/object';
 
@@ -35,7 +38,7 @@ export default decoratorWithRequiredParams(function lastValue<
   key: keyof Target,
   desc: PropertyDescriptor & { initializer?: () => any },
   [taskName]: [string]
-) {
+): DecoratorDescriptor {
   assert(
     `ember-concurrency-decorators: @lastValue expects a task name as the first parameter.`,
     typeof taskName === 'string'

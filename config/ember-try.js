@@ -116,6 +116,33 @@ module.exports = async function() {
             edition: 'classic'
           }
         }
+      },
+      {
+        name: 'typescript-3.6',
+        npm: {
+          devDependencies: {
+            typescript: '~3.6.0'
+          }
+        },
+        command: 'tsc'
+      },
+      {
+        name: 'typescript-3.8',
+        npm: {
+          devDependencies: {
+            typescript: '~3.8.0'
+          }
+        },
+        command: 'tsc'
+      },
+      {
+        name: 'typescript-3.9',
+        npm: {
+          devDependencies: {
+            typescript: '~3.9.0'
+          }
+        },
+        command: 'tsc'
       }
     ]
   };
