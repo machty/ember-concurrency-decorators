@@ -153,8 +153,8 @@ export default class ExampleComponent extends Component {
 }
 ```
 
-Encapsulated Tasks do not work with `ember-cli-typescript@1`. See the
-[TypeScript](#TypeScript) section for more details.
+Unfortunately, encapsulated Tasks do not currently work well with TypeScript.
+See the [TypeScript](#typescript-support) section for more details.
 
 #### `@taskGroup`
 
@@ -261,9 +261,9 @@ If it's still not working after that, please [create an issue][new-issue].
 
 ### TypeScript Support
 
-You can use this package with `ember-cli-typescript@2`. _But_ unfortunately
-decorators cannot yet change the type signature of the decorated element. This
-is why you are getting type errors like:
+You can use this package with TypeScript, _but_ unfortunately decorators cannot
+yet change the type signature of the decorated element. This is why you may get
+type errors like:
 
 ```ts
 import { task } from 'ember-concurrency-decorators';
@@ -284,31 +284,14 @@ export default class Foo {
 TS2339: Property 'perform' does not exist on type '() => IterableIterator<any>'.
 ```
 
-Check issue [#30][issue-typescript] for more details.
+See [ember-concurrency's documentation on TypeScript][ec-ts-docs] for more
+details and workarounds.
 
+See also [issue #30][issue-typescript] and [PR #56][pr-typescript] for more
+historical context and alternative design ideas.
+
+[ec-ts-docs]: http://ember-concurrency.com/docs/typescript
 [issue-typescript]: https://github.com/machty/ember-concurrency-decorators/issues/30
-
-Very soon, you will be able to use the following syntax instead with TypeScript:
-
-```ts
-import { task } from 'ember-concurrency-decorators';
-
-export default class Foo {
-  @task
-  doStuff = task(function*(this: Foo) {
-    // ...
-  });
-
-  executeTheTask() {
-    this.doStuff.perform();
-  }
-}
-```
-
-This might not be using a fancy generator method, but it is 💯 type-safe! 🎉
-
-Check the [PR #56][pr-typescript] for progress.
-
 [pr-typescript]: https://github.com/machty/ember-concurrency-decorators/pull/56
 
 ### Do I _need_ this addon?
