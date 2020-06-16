@@ -7,26 +7,38 @@ import { assert } from '@ember/debug';
 import {
   task as createTaskProperty,
   taskGroup as createTaskGroupProperty,
-  TaskProperty,
-  TaskGroupProperty
+  TaskFunction as GenericTaskFunction,
+  TaskProperty as GenericTaskProperty,
+  TaskGroupProperty as GenericTaskGroupProperty,
+  EncapsulatedTaskDescriptor as GenericEncapsulatedTask
 } from 'ember-concurrency';
 
 export { default as lastValue } from './last-value';
 
-type TaskOptions = {
-  [option in keyof TaskProperty]?: Parameters<TaskProperty[option]> extends [
-    infer P
-  ]
-    ? P
-    : true;
+type TaskFunction = GenericTaskFunction<unknown, unknown[]>;
+type TaskProperty = GenericTaskProperty<unknown, unknown[]>;
+type TaskGroupProperty = GenericTaskGroupProperty<unknown>;
+type EncapsulatedTask = GenericEncapsulatedTask<unknown, unknown[]>;
+
+type OptionsFor<T extends object> = {
+  [K in OptionKeysFor<T>]?: OptionTypeFor<T, T[K]>;
 };
-type TaskGroupOptions = {
-  [option in keyof TaskGroupProperty]?: Parameters<
-    TaskGroupProperty[option]
-  > extends [infer P]
-    ? P
-    : true;
-};
+
+type OptionKeysFor<T extends object> = {
+  [K in keyof T]: OptionKeyFor<T, K, T[K]>;
+}[keyof T];
+
+type OptionKeyFor<T, K, F> = F extends (...args: unknown[]) => T ? K : never;
+
+type OptionTypeFor<T, F> = F extends (...args: []) => T
+  ? true
+  : F extends (arg: infer Arg) => T
+  ? Arg
+  : never;
+
+type TaskOptions = OptionsFor<TaskProperty>;
+
+type TaskGroupOptions = OptionsFor<TaskGroupProperty>;
 
 type Decorator = (
   ...args: Parameters<MethodDecorator>
@@ -58,16 +70,32 @@ type ObjectValues<O> = O extends { [s: string]: infer V } ? V : never;
  * @returns {object|null}
  * @private
  */
-function extractValue(desc: DecoratorDescriptor): any {
+function extractValue(desc: DecoratorDescriptor): unknown {
   if (typeof desc.initializer === 'function') {
-    return desc.initializer.call(null);
+    return desc.initializer.call(undefined);
   }
+
   if (typeof desc.get === 'function') {
-    return desc.get.call(null);
+    return desc.get.call(undefined);
   }
+
   if (desc.value) {
     return desc.value;
   }
+
+  return undefined;
+}
+
+function isTaskFunction(value: unknown): value is TaskFunction {
+  return typeof value === 'function';
+}
+
+function isEncapsulatedTask(value: unknown): value is EncapsulatedTask {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    isTaskFunction((value as { perform?: unknown }).perform)
+  );
 }
 
 /**
@@ -78,15 +106,20 @@ function extractValue(desc: DecoratorDescriptor): any {
  * @returns {TaskProperty}
  * @private
  */
-function createTaskFromDescriptor(desc: DecoratorDescriptor) {
+function createTaskFromDescriptor(desc: DecoratorDescriptor): TaskProperty {
   const value = extractValue(desc);
-  assert(
-    'ember-concurrency-decorators: Can only decorate a generator function as a task or an object with a generator method `perform` as an encapsulated task.',
-    typeof value === 'function' ||
-      (typeof value === 'object' && typeof value.perform === 'function')
-  );
 
-  return createTaskProperty(value);
+  if (isTaskFunction(value)) {
+    return createTaskProperty(value);
+  }
+
+  if (isEncapsulatedTask(value)) {
+    return createTaskProperty(value);
+  }
+
+  assert(
+    'ember-concurrency-decorators: Can only decorate a generator function as a task or an object with a generator method `perform` as an encapsulated task.'
+  );
 }
 
 /**
@@ -97,7 +130,9 @@ function createTaskFromDescriptor(desc: DecoratorDescriptor) {
  * @returns {TaskGroupProperty}
  * @private
  */
-function createTaskGroupFromDescriptor(_desc: DecoratorDescriptor) {
+function createTaskGroupFromDescriptor(
+  _desc: DecoratorDescriptor
+): TaskGroupProperty {
   return createTaskGroupProperty();
 }
 
@@ -115,7 +150,11 @@ function applyOptions(
 function applyOptions(
   options: TaskOptions,
   task: TaskProperty
-): TaskProperty & Decorator {
+): TaskProperty & Decorator;
+function applyOptions(
+  options: TaskGroupOptions | TaskOptions,
+  task: TaskGroupProperty | TaskProperty
+): (TaskGroupProperty | TaskProperty) & Decorator {
   return Object.entries(options).reduce(
     (
       taskProperty,
@@ -137,8 +176,14 @@ function applyOptions(
     },
     task
     // The CP decorator gets executed in `createDecorator`
-  ) as TaskProperty & Decorator;
+  ) as typeof task & Decorator;
 }
+
+type MethodOrPropertyDecoratorWithParams<
+  Params extends unknown[]
+> = MethodDecorator &
+  PropertyDecorator &
+  ((...params: Params) => MethodDecorator & PropertyDecorator);
 
 /**
  * Creates a decorator function that transforms the decorated property using the
@@ -149,13 +194,21 @@ function applyOptions(
  * @param {object} [baseOptions={}]
  * @private
  */
-const createDecorator = (
+function createDecorator(
+  propertyCreator: (desc: DecoratorDescriptor) => TaskProperty,
+  baseOptions?: TaskOptions
+): MethodOrPropertyDecoratorWithParams<[TaskOptions]>;
+function createDecorator<Params extends unknown[]>(
+  propertyCreator: (desc: DecoratorDescriptor) => TaskGroupProperty,
+  baseOptions?: TaskGroupOptions
+): MethodOrPropertyDecoratorWithParams<[TaskGroupOptions]>;
+function createDecorator(
   propertyCreator: (
     desc: DecoratorDescriptor
   ) => TaskProperty | TaskGroupProperty,
   baseOptions: TaskOptions | TaskGroupOptions = {}
-) =>
-  decoratorWithParams<[typeof baseOptions?], object>(
+): MethodOrPropertyDecoratorWithParams<[TaskOptions | TaskGroupOptions]> {
+  return decoratorWithParams<object, [typeof baseOptions?]>(
     (target, key, desc, [userOptions] = []) => {
       const { initializer, value } = desc;
       delete desc.initializer;
@@ -166,8 +219,8 @@ const createDecorator = (
         propertyCreator({ ...desc, initializer, value })
       )(target, key, desc);
     }
-  ) as (PropertyDecorator &
-    ((options: Record<string, any>) => PropertyDecorator));
+  );
+}
 
 /**
  * Turns the decorated generator function into a task.
