@@ -150,19 +150,19 @@ function createTaskGroupFromDescriptor(
  */
 function applyOptions(
   options: TaskGroupOptions,
-  task: TaskGroupProperty
+  taskProperty: TaskGroupProperty
 ): TaskGroupProperty & Decorator;
 function applyOptions(
   options: TaskOptions,
-  task: TaskProperty
+  taskProperty: TaskProperty
 ): TaskProperty & Decorator;
 function applyOptions(
   options: TaskGroupOptions | TaskOptions,
-  task: TaskGroupProperty | TaskProperty
+  taskProperty: TaskGroupProperty | TaskProperty
 ): (TaskGroupProperty | TaskProperty) & Decorator {
   return Object.entries(options).reduce(
     (
-      taskProperty,
+      optionTaskProperty,
       [key, value]: [
         keyof typeof options,
         ObjectValues<Required<typeof options>>
@@ -170,18 +170,18 @@ function applyOptions(
     ) => {
       assert(
         `ember-concurrency-decorators: Option '${key}' is not a valid function`,
-        typeof taskProperty[key] === 'function'
+        typeof optionTaskProperty[key] === 'function'
       );
       if (value === true) {
-        return (taskProperty[key] as () => typeof taskProperty)();
+        return (optionTaskProperty[key] as () => typeof optionTaskProperty)();
       }
-      return (taskProperty[key] as (o: typeof value) => typeof taskProperty)(
-        value
-      );
+      return (optionTaskProperty[key] as (
+        o: typeof value
+      ) => typeof optionTaskProperty)(value);
     },
-    task
+    taskProperty
     // The CP decorator gets executed in `createDecorator`
-  ) as typeof task & Decorator;
+  ) as typeof taskProperty & Decorator;
 }
 
 type MethodOrPropertyDecoratorWithParams<
