@@ -10,7 +10,12 @@ import {
   TaskFunction as GenericTaskFunction,
   TaskProperty as GenericTaskProperty,
   TaskGroupProperty as GenericTaskGroupProperty,
-  EncapsulatedTaskDescriptor as GenericEncapsulatedTask
+  EncapsulatedTaskDescriptor as GenericEncapsulatedTask,
+  Task,
+  TaskFunctionArgs,
+  TaskFunctionReturnType,
+  EncapsulatedTaskDescriptorArgs,
+  EncapsulatedTaskDescriptorReturnType
 } from 'ember-concurrency';
 
 export { default as lastValue } from './last-value';
@@ -222,6 +227,8 @@ function createDecorator(
   );
 }
 
+const taskDecorator = createDecorator(createTaskFromDescriptor);
+
 /**
  * Turns the decorated generator function into a task.
  *
@@ -245,7 +252,40 @@ function createDecorator(
  * @param {object?} [options={}]
  * @return {TaskProperty}
  */
-export const task = createDecorator(createTaskFromDescriptor);
+export function task(target: object, propertyKey: string | symbol): void;
+export function task(options: TaskOptions): PropertyDecorator;
+export function task<T extends TaskFunction>(
+  taskFn: T
+): Task<TaskFunctionReturnType<T>, TaskFunctionArgs<T>>;
+export function task<T extends EncapsulatedTask>(
+  taskFn: T
+): Task<
+  EncapsulatedTaskDescriptorReturnType<T>,
+  EncapsulatedTaskDescriptorArgs<T>
+>;
+export function task(
+  ...args:
+    | [object, string | symbol]
+    | [object, string | symbol, PropertyDescriptor]
+    | [TaskOptions]
+    | [TaskFunction]
+    | [EncapsulatedTask]
+):
+  | TaskFunction
+  | EncapsulatedTask
+  | PropertyDescriptor
+  | void
+  // It doesn't *actuallly* ever return these, but they're needed for compatibility with the overloads.
+  | PropertyDecorator
+  | Task<unknown, unknown[]> {
+  const [argument1, argument2, argument3] = args;
+  if (isTaskFunction(argument1) || isEncapsulatedTask(argument1)) {
+    return argument1;
+  }
+  if (argument2 && argument3) {
+    return taskDecorator(argument1, argument2, argument3);
+  }
+}
 
 /**
  * Turns the decorated generator function into a task and applies the
