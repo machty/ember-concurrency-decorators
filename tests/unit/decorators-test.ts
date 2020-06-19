@@ -1,10 +1,11 @@
 /* eslint-disable max-classes-per-file */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 import { module, test } from 'qunit';
 
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
+import Ember from 'ember';
 
 import {
   task,
@@ -120,11 +121,26 @@ module('Unit | decorators', function() {
       subject.get('c').perform();
       subject.get('d').perform();
     });
-    assert.equal(subject.get('doStuff').last?.value, 123);
-    assert.equal(subject.get('a').last?.value, 456);
-    assert.equal(subject.get('b').last?.value, 789);
-    assert.equal(subject.get('c').last?.value, 12);
-    assert.equal(subject.get('d').last?.value, 34);
+    // eslint-disable-next-line ember/new-module-imports
+    if (/^2\./.test(Ember.VERSION)) {
+      // Have access computed properties with .get w/ Ember 2.x
+      // @ts-ignore
+      assert.equal(subject.get('doStuff.last.value'), 123);
+      // @ts-ignore
+      assert.equal(subject.get('a.last.value'), 456);
+      // @ts-ignore
+      assert.equal(subject.get('b.last.value'), 789);
+      // @ts-ignore
+      assert.equal(subject.get('c.last.value'), 12);
+      // @ts-ignore
+      assert.equal(subject.get('d.last.value'), 34);
+    } else {
+      assert.equal(subject.get('doStuff').last?.value, 123);
+      assert.equal(subject.get('a').last?.value, 456);
+      assert.equal(subject.get('b').last?.value, 789);
+      assert.equal(subject.get('c').last?.value, 12);
+      assert.equal(subject.get('d').last?.value, 34);
+    }
   });
 
   // This has actually never worked.
@@ -172,6 +188,12 @@ module('Unit | decorators', function() {
       subject = TestSubject.create();
       subject.get('encapsulated').perform();
     });
-    assert.equal(subject.get('encapsulated').last?.value, 56);
+    // eslint-disable-next-line ember/new-module-imports
+    if (/^2\./.test(Ember.VERSION)) {
+      // @ts-ignore
+      assert.equal(subject.get('encapsulated.last.value'), 56);
+    } else {
+      assert.equal(subject.get('encapsulated').last?.value, 56);
+    }
   });
 });
