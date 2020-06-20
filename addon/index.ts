@@ -279,13 +279,11 @@ export function task(
     | [TaskFunction]
     | [EncapsulatedTask]
 ):
+  | PropertyDecorator // needed for overload compatibility
   | TaskFunction
   | EncapsulatedTask
   | PropertyDescriptor
-  | void
-  // It doesn't *actuallly* ever return these, but they're needed for compatibility with the overloads.
-  | PropertyDecorator
-  | Task<unknown, unknown[]> {
+  | void {
   const [argument1, argument2, argument3] = args;
   if (isTaskFunction(argument1) || isEncapsulatedTask(argument1)) {
     return argument1;
