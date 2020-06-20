@@ -4,6 +4,7 @@ import {
 } from '@ember-decorators/utils/decorator';
 import { assert } from '@ember/debug';
 import EmberObject from '@ember/object';
+import ComputedProperty from '@ember/object/computed';
 
 import {
   task as createTaskProperty,
@@ -258,14 +259,18 @@ export function task(options: TaskOptions): PropertyDecorator;
 // TODO: remove & EmberObject when https://github.com/machty/ember-concurrency/pull/363 lands
 export function task<T extends TaskFunction>(
   taskFn: T
-): Task<TaskFunctionReturnType<T>, TaskFunctionArgs<T>> & EmberObject;
+): ComputedProperty<
+  Task<TaskFunctionReturnType<T>, TaskFunctionArgs<T>> & EmberObject
+>;
 export function task<T extends EncapsulatedTask>(
   taskFn: T
-): Task<
-  EncapsulatedTaskDescriptorReturnType<T>,
-  EncapsulatedTaskDescriptorArgs<T>
-> &
-  EmberObject;
+): ComputedProperty<
+  Task<
+    EncapsulatedTaskDescriptorReturnType<T>,
+    EncapsulatedTaskDescriptorArgs<T>
+  > &
+    EmberObject
+>;
 export function task(
   ...args:
     | [object, string | symbol]
