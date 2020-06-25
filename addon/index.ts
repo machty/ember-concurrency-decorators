@@ -31,10 +31,10 @@ type OptionKeysFor<T extends object> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OptionKeyFor<T, K, F> = F extends (...args: any[]) => T ? K : never;
 
-type OptionTypeFor<T, F> = F extends (...args: []) => T
-  ? true
-  : F extends (arg: infer Arg) => T
-  ? Arg
+type OptionTypeFor<T, F> = F extends (...args: infer Args) => T
+  ? Args[0] extends undefined
+    ? true
+    : Args[0]
   : never;
 
 type TaskOptions = OptionsFor<TaskProperty>;
