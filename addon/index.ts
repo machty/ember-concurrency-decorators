@@ -28,7 +28,8 @@ type OptionKeysFor<T extends object> = {
   [K in keyof T]: OptionKeyFor<T, K, T[K]>;
 }[keyof T];
 
-type OptionKeyFor<T, K, F> = F extends (...args: unknown[]) => T ? K : never;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type OptionKeyFor<T, K, F> = F extends (...args: any[]) => T ? K : never;
 
 type OptionTypeFor<T, F> = F extends (...args: []) => T
   ? true
