@@ -34,7 +34,9 @@ type OptionKeyFor<T, K, F> = F extends (...args: any[]) => T ? K : never;
 type OptionTypeFor<T, F> = F extends (...args: infer Args) => T
   ? Args[0] extends undefined
     ? true
-    : Args[0]
+    : Args[1] extends undefined
+    ? Args[0]
+    : Args[0] | Array<Args[0]>
   : never;
 
 type TaskOptions = OptionsFor<TaskProperty>;
@@ -170,6 +172,12 @@ function applyOptions(
       );
       if (value === true) {
         return (taskProperty[key] as () => typeof taskProperty)();
+      }
+      if (Array.isArray(value)) {
+        type O = typeof value[0];
+        return (taskProperty[key] as (...o: O[]) => typeof taskProperty)(
+          ...value
+        );
       }
       return (taskProperty[key] as (o: typeof value) => typeof taskProperty)(
         value
