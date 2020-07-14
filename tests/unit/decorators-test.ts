@@ -48,6 +48,24 @@ module('Unit | decorators', function() {
         yield;
         return 34;
       };
+
+      /* eslint-disable @typescript-eslint/no-empty-function */
+
+      @task({ restartable: true }) restartable = function*() {};
+      @task({ enqueue: true }) enqueue = function*() {};
+      @task({ drop: true }) drop = function*() {};
+      @task({ keepLatest: true }) keepLatest = function*() {};
+      @task({ evented: true }) evented = function*() {};
+      @task({ debug: true }) debug = function*() {};
+
+      // Note: these options work even when strictFunctionTypes is enabled, but
+      // turning it on in this repo breaks other things in addon/index.ts
+      @task({ on: 'hi' }) on = function*() {};
+      @task({ cancelOn: 'bye' }) cancelOn = function*() {};
+      @task({ maxConcurrency: 1 }) maxConcurrency = function*() {};
+      @task({ group: 'foo' }) group = function*() {};
+
+      /* eslint-enable @typescript-eslint/no-empty-function */
     }
 
     let subject!: TestSubject;
