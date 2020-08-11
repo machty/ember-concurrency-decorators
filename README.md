@@ -109,6 +109,15 @@ You can also pass further options to the task decorator:
 }
 ```
 
+You can also use task lifecycle event hooks in your tasks:
+
+```js
+@task({ on: 'didInsertElement' })
+*doStuff() {
+  // ...
+}
+```
+
 For your convenience, there are extra decorators for all [concurrency modifiers](http://ember-concurrency.com/docs/task-concurrency):
 
 | Shorthand          | Equivalent                     |
