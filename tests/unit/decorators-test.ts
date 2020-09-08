@@ -61,7 +61,11 @@ module('Unit | decorators', function() {
       // Note: these options work even when strictFunctionTypes is enabled, but
       // turning it on in this repo breaks other things in addon/index.ts
       @task({ on: 'hi' }) on = function*() {};
+      @task({ on: ['hi'] }) on1 = function*() {};
+      @task({ on: ['hi', 'there'] }) on2 = function*() {};
       @task({ cancelOn: 'bye' }) cancelOn = function*() {};
+      @task({ cancelOn: ['bye'] }) cancelOn1 = function*() {};
+      @task({ cancelOn: ['bye', 'later'] }) cancelOn2 = function*() {};
       @task({ maxConcurrency: 1 }) maxConcurrency = function*() {};
       @task({ group: 'foo' }) group = function*() {};
 
