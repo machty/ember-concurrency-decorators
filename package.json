@@ -32,6 +32,7 @@
     "ember-cli-typescript": "^3.1.4"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
     "@clark/eslint-config-ember": "^1.24.4",
     "@clark/eslint-config-ember-typescript": "^1.24.4",
     "@clark/eslint-config-node": "^1.24.4",
