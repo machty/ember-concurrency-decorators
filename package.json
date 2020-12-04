@@ -1,6 +1,6 @@
 {
   "name": "ember-concurrency-decorators",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "decorator syntax for declaring/configuring ember-concurrency tasks",
   "keywords": [
     "ember-addon"
