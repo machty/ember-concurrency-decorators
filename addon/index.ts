@@ -156,28 +156,30 @@ function applyOptions(
   options: TaskGroupOptions | TaskOptions,
   task: TaskGroupProperty | TaskProperty
 ): (TaskGroupProperty | TaskProperty) & Decorator {
-  return Object.entries(options).reduce(
-    (
-      taskProperty,
-      [key, value]: [
-        keyof typeof options,
-        ObjectValues<Required<typeof options>>
-      ]
-    ) => {
-      assert(
-        `ember-concurrency-decorators: Option '${key}' is not a valid function`,
-        typeof taskProperty[key] === 'function'
-      );
-      if (value === true) {
-        return (taskProperty[key] as () => typeof taskProperty)();
-      }
-      return (taskProperty[key] as (o: typeof value) => typeof taskProperty)(
-        value
-      );
-    },
-    task
-    // The CP decorator gets executed in `createDecorator`
-  ) as typeof task & Decorator;
+  const keys = Object.keys(options) as Array<keyof typeof options>;
+
+  for (const key of keys) {
+    const value: ObjectValues<Required<typeof options>> | undefined =
+      options[key];
+
+    assert(
+      `ember-concurrency-decorators: Option '${key}' is not a valid value`,
+      value !== undefined
+    );
+    assert(
+      `ember-concurrency-decorators: Option '${key}' is not a valid function`,
+      typeof task[key] === 'function'
+    );
+
+    if (value === true) {
+      (task[key] as () => typeof task)();
+    }
+
+    (task[key] as (o: typeof value) => typeof task)(value);
+  }
+
+  // The CP decorator gets executed in `createDecorator`
+  return task as typeof task & Decorator;
 }
 
 type MethodOrPropertyDecoratorWithParams<
