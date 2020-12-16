@@ -173,9 +173,9 @@ function applyOptions(
 
     if (value === true) {
       (task[key] as () => typeof task)();
+    } else {
+      (task[key] as (o: typeof value) => typeof task)(value);
     }
-
-    (task[key] as (o: typeof value) => typeof task)(value);
   }
 
   // The CP decorator gets executed in `createDecorator`
