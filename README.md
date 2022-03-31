@@ -14,6 +14,10 @@ This Ember addon lets you use the
 for declaring/configuring
 [ember-concurrency](https://ember-concurrency.com) tasks.
 
+## Deprecated/merged into ember-concurrency v2
+
+All of the decorators provided by this repo were merged into Ember Concurrency v2; if you running Ember Concurrency 2.0.0+, you can remove this addon, and convert all of your `import {...} from 'ember-concurrency-decorators'` to `import {...} from 'ember-concurrency'`.
+
 ## Installation
 
 ⚠️👉 Check the [FAQ](#faq), if something isn't working or you're not sure what
